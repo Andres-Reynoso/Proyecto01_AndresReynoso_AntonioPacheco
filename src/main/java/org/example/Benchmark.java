@@ -14,7 +14,8 @@ public class Benchmark {
     public static void ejecutar() {
         try (PrintWriter writer = new PrintWriter(new FileWriter("resultados.csv"))) {
 
-            writer.println("N,Estructura,Tiempo_ns");
+            // Nuevo encabezado más completo
+            writer.println("N,Estructura,Tiempo_ns,Estado");
 
             for (int n : N_VALUES) {
 
@@ -46,28 +47,35 @@ public class Benchmark {
                     totalAVL += (finAVL - iniAVL);
                 }
 
-                writer.println(n + ",BST_PROMEDIO," + (totalBST / REPETICIONES));
-                writer.println(n + ",AVL_PROMEDIO," + (totalAVL / REPETICIONES));
+                writer.println(n + ",BST_PROMEDIO," + (totalBST / REPETICIONES) + ",OK");
+                writer.println(n + ",AVL_PROMEDIO," + (totalAVL / REPETICIONES) + ",OK");
+
 
                 // PEOR CASO BST
-
                 BST<Integer> worstBST = new BST<>(Integer::compareTo);
 
-                try {
-                    long iniWorst = System.nanoTime();
+                long iniWorst = System.nanoTime();
+                long finWorst;
 
+                try {
                     for (int i = 0; i < n; i++) {
                         worstBST.insert(i); // inserción ordenada
                     }
 
-                    long finWorst = System.nanoTime();
-                    writer.println(n + ",BST_PEOR_CASO," + (finWorst - iniWorst));
+                    finWorst = System.nanoTime();
+                    writer.println(n + ",BST_PEOR_CASO," + (finWorst - iniWorst) + ",OK");
 
                 } catch (StackOverflowError e) {
-                    writer.println(n + ",BST_PEOR_CASO,STACK_OVERFLOW");
-                    System.out.println(" StackOverflow en BST con N = " + n + " (peor caso)");
+
+                    finWorst = System.nanoTime();
+
+                    writer.println(n + ",BST_PEOR_CASO," + (finWorst - iniWorst) + ",STACK_OVERFLOW");
+
+                    System.out.println("⚠️ StackOverflow en BST con N = " + n + " (peor caso)");
                 }
-                // LISTA ORDENADA (COMPARACIÓN)
+
+
+                // LISTA ORDENADA
 
                 List<Integer> lista = new ArrayList<>();
 
@@ -78,7 +86,7 @@ public class Benchmark {
                 }
                 long finList = System.nanoTime();
 
-                writer.println(n + ",LISTA_ORDENADA," + (finList - iniList));
+                writer.println(n + ",LISTA_ORDENADA," + (finList - iniList) + ",OK");
             }
 
             System.out.println("Benchmark completado. Archivo generado: resultados.csv");

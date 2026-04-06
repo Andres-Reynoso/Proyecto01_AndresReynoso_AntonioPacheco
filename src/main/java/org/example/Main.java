@@ -9,9 +9,8 @@ public class Main {
 
         System.out.println("=== PRUEBA INTEGRAL DEL SISTEMA ===\n");
 
-        // =========================================================
         // 1. CARGA DESDE ARCHIVO (M-TREE REAL)
-        // =========================================================
+
         System.out.println(">>> CARGANDO CIUDAD DESDE ARCHIVO");
 
         MTree<String> ciudad = cargarCiudadDesdeArchivo("datos_ciudad.txt");
@@ -26,10 +25,7 @@ public class Main {
 
         System.out.println();
 
-
-        // =========================================================
         // 2. BST vs AVL
-        // =========================================================
         System.out.println(">>> PRUEBA BST vs AVL");
 
         BST<Integer> bst = new BST<>(Integer::compareTo);
@@ -52,10 +48,8 @@ public class Main {
 
         System.out.println();
 
-
-        // =========================================================
         // 3. HEAP
-        // =========================================================
+
         System.out.println(">>> PRUEBA HEAP");
 
         Heap<Evento> heap = new Heap<>(10, EventoComparators.porPrioridad.reversed());
@@ -90,9 +84,8 @@ public class Main {
         System.out.println();
 
 
-        // =========================================================
         // 4. CAMBIO DE CRITERIO
-        // =========================================================
+
         System.out.println(">>> CAMBIO DE CRITERIO DE ORDEN");
 
         heap = new Heap<>(10, EventoComparators.porCongestion.reversed());
@@ -107,10 +100,8 @@ public class Main {
 
         System.out.println();
 
-
-        // =========================================================
         // 5. BENCHMARK
-        // =========================================================
+
         System.out.println(">>> EJECUTANDO BENCHMARK");
 
         Benchmark.ejecutar();
