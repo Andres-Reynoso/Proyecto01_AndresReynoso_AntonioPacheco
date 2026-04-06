@@ -1,0 +1,5 @@
+Ciudad,Distrito,Zona,Avenida,Interseccion
+Guatemala,Central,Zona1,Reforma,A
+Guatemala,Central,Zona1,Reforma,B
+Guatemala,Norte,Zona5,Marti,C
+Guatemala,Sur,Zona10,Diagonal6,D
