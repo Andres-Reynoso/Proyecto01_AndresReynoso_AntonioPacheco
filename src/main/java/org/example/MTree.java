@@ -5,9 +5,11 @@ import java.util.*;
 public class MTree<T> {
 
     private MNode<T> root;
+    private int maxChildren;
 
-    public MTree(T rootData) {
-        this.root = new MNode<>(rootData);
+    public MTree(T rootData, int maxChildren) {
+        this.maxChildren = maxChildren;
+        this.root = new MNode<>(rootData, maxChildren);
     }
 
     public MNode<T> getRoot() {
@@ -16,11 +18,22 @@ public class MTree<T> {
 
     public void addChild(MNode<T> parent, T data) {
         if (parent != null) {
-            parent.addChild(new MNode<>(data));
+            parent.addChild(new MNode<>(data, maxChildren));
         }
     }
 
-    //  BFS
+    // 🔹 NUEVO: contar intersecciones por nodo
+    public int countFromNode(MNode<T> node) {
+        if (node == null) return 0;
+
+        int count = 1;
+        for (MNode<T> child : node.children) {
+            count += countFromNode(child);
+        }
+        return count;
+    }
+
+    // BFS
     public void levelOrder() {
         if (root == null) return;
 
@@ -38,18 +51,6 @@ public class MTree<T> {
         System.out.println();
     }
 
-    //  Contar intersecciones en un nodo específico
-    public int countNodesFrom(MNode<T> node) {
-        if (node == null) return 0;
-
-        int count = 1;
-        for (MNode<T> child : node.children) {
-            count += countNodesFrom(child);
-        }
-        return count;
-    }
-
-    // Profundidad máxima
     public int maxDepth() {
         return maxDepthRec(root);
     }
@@ -65,7 +66,6 @@ public class MTree<T> {
         return max + 1;
     }
 
-    // Hojas
     public int countLeaves() {
         return countLeavesRec(root);
     }
@@ -81,7 +81,6 @@ public class MTree<T> {
         return count;
     }
 
-    //Nodos internos
     public int countInternalNodes() {
         return countInternalRec(root);
     }
@@ -96,13 +95,11 @@ public class MTree<T> {
         return count;
     }
 
-    //Factor de ramificación
     public double branchingFactor() {
         int totalChildren = countAllChildren(root);
         int totalNodes = countNodes(root);
 
-        if (totalNodes == 0) return 0;
-        return (double) totalChildren / totalNodes;
+        return (totalNodes == 0) ? 0 : (double) totalChildren / totalNodes;
     }
 
     private int countAllChildren(MNode<T> node) {

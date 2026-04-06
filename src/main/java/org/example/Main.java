@@ -7,26 +7,18 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("=== PRUEBA INTEGRAL DEL SISTEMA ===\n");
-
-        // 1. CARGA DESDE ARCHIVO (M-TREE REAL)
-
-        System.out.println(">>> CARGANDO CIUDAD DESDE ARCHIVO");
+        System.out.println("=== PRUEBA INTEGRAL ===\n");
 
         MTree<String> ciudad = cargarCiudadDesdeArchivo("datos_ciudad.txt");
 
-        System.out.print("Recorrido BFS: ");
         ciudad.levelOrder();
 
-        System.out.println("Profundidad máxima: " + ciudad.maxDepth());
+        System.out.println("Profundidad: " + ciudad.maxDepth());
         System.out.println("Hojas: " + ciudad.countLeaves());
-        System.out.println("Nodos internos: " + ciudad.countInternalNodes());
-        System.out.println("Factor ramificación: " + ciudad.branchingFactor());
+        System.out.println("Internos: " + ciudad.countInternalNodes());
+        System.out.println("Factor: " + ciudad.branchingFactor());
 
-        System.out.println();
-
-        // 2. BST vs AVL
-        System.out.println(">>> PRUEBA BST vs AVL");
+        System.out.println("\n>>> BST vs AVL");
 
         BST<Integer> bst = new BST<>(Integer::compareTo);
         AVL<Integer> avl = new AVL<>(Integer::compareTo);
@@ -40,17 +32,10 @@ public class Main {
         }
 
         System.out.println("Altura BST: " + bst.height());
-        System.out.println("Comparaciones BST: " + bst.comparisons);
-
         System.out.println("Altura AVL: " + avl.height());
-        System.out.println("Comparaciones AVL: " + avl.comparisons);
-        System.out.println("Rotaciones AVL: " + avl.rotations);
+        System.out.println("Balance AVL: " + avl.getBalanceFactorRoot());
 
-        System.out.println();
-
-        // 3. HEAP
-
-        System.out.println(">>> PRUEBA HEAP");
+        System.out.println("\n>>> HEAP");
 
         Heap<Evento> heap = new Heap<>(10, EventoComparators.porPrioridad.reversed());
 
@@ -62,58 +47,20 @@ public class Main {
         heap.insert(e2);
         heap.insert(e3);
 
-        System.out.println("Extrayendo eventos por prioridad:");
         while (!heap.isEmpty()) {
             System.out.println(heap.extract());
         }
 
-        // Cambio de prioridad
-        System.out.println("\n>>> Cambio de prioridad dinámico");
-
-        heap.insert(e1);
-        heap.insert(e2);
-        heap.insert(e3);
-
-        e2.setPrioridad(15);
-        heap.updatePriority(e2);
-
-        while (!heap.isEmpty()) {
-            System.out.println(heap.extract());
-        }
-
-        System.out.println();
-
-
-        // 4. CAMBIO DE CRITERIO
-
-        System.out.println(">>> CAMBIO DE CRITERIO DE ORDEN");
-
-        heap = new Heap<>(10, EventoComparators.porCongestion.reversed());
-
-        heap.insert(e1);
-        heap.insert(e2);
-        heap.insert(e3);
-
-        while (!heap.isEmpty()) {
-            System.out.println(heap.extract());
-        }
-
-        System.out.println();
-
-        // 5. BENCHMARK
-
-        System.out.println(">>> EJECUTANDO BENCHMARK");
-
+        System.out.println("\n>>> BENCHMARK");
         Benchmark.ejecutar();
 
-        System.out.println("\nArchivo 'resultados.csv' generado correctamente.");
-        System.out.println("\n=== FIN DE PRUEBA ===");
+        System.out.println("\n=== FIN ===");
     }
-
 
     private static MTree<String> cargarCiudadDesdeArchivo(String path) {
 
-        MTree<String> tree = new MTree<>("Ciudad");
+        int maxChildren = 5;
+        MTree<String> tree = new MTree<>("Ciudad", maxChildren);
         MNode<String> root = tree.getRoot();
 
         Map<String, MNode<String>> mapa = new HashMap<>();
@@ -121,7 +68,7 @@ public class Main {
 
         try (Scanner sc = new Scanner(new File(path))) {
 
-            if (sc.hasNextLine()) sc.nextLine(); // Saltar encabezado
+            if (sc.hasNextLine()) sc.nextLine();
 
             while (sc.hasNextLine()) {
 
@@ -132,30 +79,26 @@ public class Main {
                 String avenida = partes[3];
                 String inter = partes[4];
 
-                // Distrito
-                mapa.putIfAbsent(distrito, new MNode<>(distrito));
+                mapa.putIfAbsent(distrito, new MNode<>(distrito, maxChildren));
                 if (!root.children.contains(mapa.get(distrito))) {
                     root.addChild(mapa.get(distrito));
                 }
 
-                // Zona
-                mapa.putIfAbsent(zona, new MNode<>(zona));
+                mapa.putIfAbsent(zona, new MNode<>(zona, maxChildren));
                 if (!mapa.get(distrito).children.contains(mapa.get(zona))) {
                     mapa.get(distrito).addChild(mapa.get(zona));
                 }
 
-                // Avenida
-                mapa.putIfAbsent(avenida, new MNode<>(avenida));
+                mapa.putIfAbsent(avenida, new MNode<>(avenida, maxChildren));
                 if (!mapa.get(zona).children.contains(mapa.get(avenida))) {
                     mapa.get(zona).addChild(mapa.get(avenida));
                 }
 
-                // Intersección
-                mapa.get(avenida).addChild(new MNode<>(inter));
+                mapa.get(avenida).addChild(new MNode<>(inter, maxChildren));
             }
 
         } catch (Exception e) {
-            System.out.println("Error leyendo archivo: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
 
         return tree;

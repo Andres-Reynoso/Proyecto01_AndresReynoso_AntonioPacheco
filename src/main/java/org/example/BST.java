@@ -7,15 +7,13 @@ public class BST<T> {
     private BSTNode<T> root;
     private Comparator<T> comparator;
 
-
     public int comparisons = 0;
 
     public BST(Comparator<T> comparator) {
         this.comparator = comparator;
-        this.root = null;
     }
 
-    // 1.Insert
+    // INSERT SIN DUPLICADOS
     public void insert(T data) {
         root = insertRec(root, data);
     }
@@ -23,16 +21,17 @@ public class BST<T> {
     private BSTNode<T> insertRec(BSTNode<T> node, T data) {
         if (node == null) return new BSTNode<>(data);
 
-        comparisons++; // Conteo para análisis de complejidad
-        if (comparator.compare(data, node.data) < 0)
-            node.left = insertRec(node.left, data);
-        else
-            node.right = insertRec(node.right, data);
+        comparisons++;
+        int cmp = comparator.compare(data, node.data);
+
+        if (cmp < 0) node.left = insertRec(node.left, data);
+        else if (cmp > 0) node.right = insertRec(node.right, data);
+        // si cmp == 0 → ignorar duplicado
 
         return node;
     }
 
-    // 2. Search
+    // SEARCH
     public boolean search(T data) {
         return searchRec(root, data);
     }
@@ -44,11 +43,10 @@ public class BST<T> {
         int cmp = comparator.compare(data, node.data);
 
         if (cmp == 0) return true;
-        if (cmp < 0) return searchRec(node.left, data);
-        return searchRec(node.right, data);
+        return (cmp < 0) ? searchRec(node.left, data) : searchRec(node.right, data);
     }
 
-    // 3. Delete
+    // DELETE
     public void delete(T data) {
         root = deleteRec(root, data);
     }
@@ -58,16 +56,12 @@ public class BST<T> {
 
         int cmp = comparator.compare(data, node.data);
 
-        if (cmp < 0) {
-            node.left = deleteRec(node.left, data);
-        } else if (cmp > 0) {
-            node.right = deleteRec(node.right, data);
-        } else {
-            // Caso 1 & 2: Nodo hoja o con un solo hijo
+        if (cmp < 0) node.left = deleteRec(node.left, data);
+        else if (cmp > 0) node.right = deleteRec(node.right, data);
+        else {
             if (node.left == null) return node.right;
             if (node.right == null) return node.left;
 
-            // Caso 3: Nodo con dos hijos (Sucesor in-order)
             node.data = minValue(node.right);
             node.right = deleteRec(node.right, node.data);
         }
@@ -76,19 +70,14 @@ public class BST<T> {
     }
 
     private T minValue(BSTNode<T> node) {
-        T minv = node.data;
-        while (node.left != null) {
-            minv = node.left.data;
-            node = node.left;
-        }
-        return minv;
+        while (node.left != null) node = node.left;
+        return node.data;
     }
 
-    // 4.  Recorridos (In-Order)
-    public void inOrder() {
-        inOrderRec(root);
-        System.out.println();
-    }
+    // RECORRIDOS
+    public void inOrder() { inOrderRec(root); System.out.println(); }
+    public void preOrder() { preOrderRec(root); System.out.println(); }
+    public void postOrder() { postOrderRec(root); System.out.println(); }
 
     private void inOrderRec(BSTNode<T> node) {
         if (node != null) {
@@ -98,7 +87,22 @@ public class BST<T> {
         }
     }
 
-    // 5.  Cálculo de Altura
+    private void preOrderRec(BSTNode<T> node) {
+        if (node != null) {
+            System.out.print(node.data + " ");
+            preOrderRec(node.left);
+            preOrderRec(node.right);
+        }
+    }
+
+    private void postOrderRec(BSTNode<T> node) {
+        if (node != null) {
+            postOrderRec(node.left);
+            postOrderRec(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+
     public int height() {
         return heightRec(root);
     }

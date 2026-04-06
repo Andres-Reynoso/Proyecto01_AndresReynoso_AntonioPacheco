@@ -9,8 +9,6 @@ public class AVLNode<T> {
 
     public AVLNode(T data) {
         this.data = data;
-        this.left = null;
-        this.right = null;
-        this.height = 0;
+        this.height = 1;
     }
 }

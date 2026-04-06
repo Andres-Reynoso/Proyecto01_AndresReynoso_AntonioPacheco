@@ -13,94 +13,76 @@ public class Heap<T> {
     public int swaps = 0;
 
     @SuppressWarnings("unchecked")
-    public Heap(int initialCapacity, Comparator<T> comparator) {
-        this.capacity = initialCapacity;
-        this.size = 0;
-        this.heap = (T[]) new Object[initialCapacity];
+    public Heap(int capacity, Comparator<T> comparator) {
+        this.capacity = capacity;
+        this.heap = (T[]) new Object[capacity];
         this.comparator = comparator;
     }
 
     public void insert(T value) {
         if (size == capacity) grow();
-
         heap[size] = value;
-        heapifyUp(size);
-        size++;
+        heapifyUp(size++);
     }
 
     public T extract() {
         if (size == 0) return null;
 
         T root = heap[0];
-        heap[0] = heap[size - 1];
-        heap[size - 1] = null;
-        size--;
+        heap[0] = heap[--size];
+        heap[size] = null;
 
         heapifyDown(0);
         return root;
     }
 
-    // actualizar prioridad
+    public long extractWithTime() {
+        long ini = System.nanoTime();
+        extract();
+        return System.nanoTime() - ini;
+    }
+
     public void updatePriority(T element) {
-        int index = findIndex(element);
-        if (index == -1) return;
-
-        heapifyUp(index);
-        heapifyDown(index);
-    }
-
-    private int findIndex(T element) {
         for (int i = 0; i < size; i++) {
-            if (heap[i].equals(element)) return i;
-        }
-        return -1;
-    }
-
-    public void setComparator(Comparator<T> newComparator) {
-        this.comparator = newComparator;
-        for (int i = (size / 2) - 1; i >= 0; i--) {
-            heapifyDown(i);
+            if (heap[i].equals(element)) {
+                heapifyUp(i);
+                heapifyDown(i);
+                break;
+            }
         }
     }
 
     private void heapifyUp(int i) {
         while (i > 0) {
-            int parent = (i - 1) / 2;
-
-            if (comparator.compare(heap[i], heap[parent]) < 0) {
-                swap(i, parent);
-                i = parent;
+            int p = (i - 1) / 2;
+            if (comparator.compare(heap[i], heap[p]) < 0) {
+                swap(i, p);
+                i = p;
             } else break;
         }
     }
 
     private void heapifyDown(int i) {
         while (true) {
-            int left = 2 * i + 1;
-            int right = 2 * i + 2;
-            int smallest = i;
+            int l = 2 * i + 1, r = 2 * i + 2, s = i;
 
-            if (left < size && comparator.compare(heap[left], heap[smallest]) < 0)
-                smallest = left;
+            if (l < size && comparator.compare(heap[l], heap[s]) < 0) s = l;
+            if (r < size && comparator.compare(heap[r], heap[s]) < 0) s = r;
 
-            if (right < size && comparator.compare(heap[right], heap[smallest]) < 0)
-                smallest = right;
+            if (s == i) break;
 
-            if (smallest == i) break;
-
-            swap(i, smallest);
-            i = smallest;
+            swap(i, s);
+            i = s;
         }
     }
 
     private void swap(int i, int j) {
-        T temp = heap[i];
+        T tmp = heap[i];
         heap[i] = heap[j];
-        heap[j] = temp;
+        heap[j] = tmp;
         swaps++;
     }
 
-    @SuppressWarnings("unchecked")
     private void grow() {
         capacity *= 2;
         heap = Arrays.copyOf(heap, capacity);
