@@ -2,7 +2,6 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.function.BiPredicate;
 
 public class Heap<T> {
 
@@ -12,8 +11,8 @@ public class Heap<T> {
     // Métricas
     private int swaps = 0;
 
-    // Criterio dinámico
-    private BiPredicate<T, Integer> criterio;
+    // Criterio dinámico — usa la interfaz funcional propia del proyecto
+    private CriterioTrafico<T> criterio;
 
     public Heap(int capacidad, Comparator<T> comparator) {
         this.heap = new ArrayList<>(capacidad);
@@ -53,14 +52,9 @@ public class Heap<T> {
 
     public T extractWithTime() {
         long start = System.nanoTime();
-
         T result = extract();
-
         long end = System.nanoTime();
-        long tiempo = end - start;
-
-        System.out.println("Tiempo de extracción (ns): " + tiempo);
-
+        System.out.println("Tiempo de extracción (ns): " + (end - start));
         return result;
     }
 
@@ -84,27 +78,25 @@ public class Heap<T> {
     private void rebuildHeap() {
         ArrayList<T> copia = new ArrayList<>(heap);
         heap.clear();
-
         for (T item : copia) {
             insert(item);
         }
     }
 
     // =====================
-    // CRITERIO (Main)
+    // CRITERIO (interfaz funcional propia)
     // =====================
 
-    public void setCriterio(BiPredicate<T, Integer> criterio) {
+    public void setCriterio(CriterioTrafico<T> criterio) {
         this.criterio = criterio;
     }
 
-    public void procesarConCriterio(int valor) {
+    public void procesarConCriterio(int umbral) {
         if (criterio == null) {
             throw new IllegalStateException("Criterio no definido");
         }
-
         for (T item : heap) {
-            if (criterio.test(item, valor)) {
+            if (criterio.evaluar(item, umbral)) {
                 System.out.println("Cumple criterio: " + item);
             }
         }
@@ -116,11 +108,9 @@ public class Heap<T> {
 
     public void updatePriority(T oldValue, T newValue) {
         int index = heap.indexOf(oldValue);
-
         if (index == -1) return;
 
         heap.set(index, newValue);
-
         heapifyUp(index);
         heapifyDown(index);
     }
@@ -132,9 +122,7 @@ public class Heap<T> {
     private void heapifyUp(int index) {
         while (index > 0) {
             int parent = (index - 1) / 2;
-
             if (comparator.compare(heap.get(index), heap.get(parent)) >= 0) break;
-
             swap(index, parent);
             index = parent;
         }
@@ -151,11 +139,9 @@ public class Heap<T> {
             if (left < size && comparator.compare(heap.get(left), heap.get(best)) < 0) {
                 best = left;
             }
-
             if (right < size && comparator.compare(heap.get(right), heap.get(best)) < 0) {
                 best = right;
             }
-
             if (best == index) break;
 
             swap(index, best);
@@ -167,7 +153,6 @@ public class Heap<T> {
         T temp = heap.get(i);
         heap.set(i, heap.get(j));
         heap.set(j, temp);
-
         swaps++;
     }
 }

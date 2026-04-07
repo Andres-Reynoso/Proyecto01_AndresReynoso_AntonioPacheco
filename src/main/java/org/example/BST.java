@@ -41,7 +41,7 @@ public class BST<T> {
             } else if (cmp > 0) {
                 current = current.getRight();
             } else {
-                // 🔴 Duplicado: no insertar
+                // Duplicado: no insertar
                 return;
             }
         }
@@ -70,7 +70,7 @@ public class BST<T> {
     }
 
     // =====================
-    // DELETE (recursivo, pero seguro)
+    // DELETE (recursivo)
     // =====================
     public void delete(T data) {
         root = deleteRec(root, data);
@@ -87,11 +87,9 @@ public class BST<T> {
         } else if (cmp > 0) {
             node.setRight(deleteRec(node.getRight(), data));
         } else {
-            // Nodo encontrado
             if (node.getLeft() == null) return node.getRight();
             if (node.getRight() == null) return node.getLeft();
 
-            // Dos hijos: reemplazar con el mínimo del subárbol derecho
             T min = minValue(node.getRight());
             node.setData(min);
             node.setRight(deleteRec(node.getRight(), min));
@@ -106,6 +104,49 @@ public class BST<T> {
             node = node.getLeft();
         }
         return node.getData();
+    }
+
+    // =====================
+    // RECORRIDOS
+    // =====================
+
+    public void inOrder() {
+        inOrderRec(root);
+        System.out.println();
+    }
+
+    private void inOrderRec(BSTNode<T> node) {
+        if (node != null) {
+            inOrderRec(node.getLeft());
+            System.out.print(node.getData() + " ");
+            inOrderRec(node.getRight());
+        }
+    }
+
+    public void preOrder() {
+        preOrderRec(root);
+        System.out.println();
+    }
+
+    private void preOrderRec(BSTNode<T> node) {
+        if (node != null) {
+            System.out.print(node.getData() + " ");
+            preOrderRec(node.getLeft());
+            preOrderRec(node.getRight());
+        }
+    }
+
+    public void postOrder() {
+        postOrderRec(root);
+        System.out.println();
+    }
+
+    private void postOrderRec(BSTNode<T> node) {
+        if (node != null) {
+            postOrderRec(node.getLeft());
+            postOrderRec(node.getRight());
+            System.out.print(node.getData() + " ");
+        }
     }
 
     // =====================

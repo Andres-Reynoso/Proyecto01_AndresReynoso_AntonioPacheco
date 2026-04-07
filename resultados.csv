@@ -1,49 +1,49 @@
 N,Operacion,Tiempo_ns,Valor,Estado,Descripcion
-1000,BST_INSERT,311960,11132,OK,Insercion promedio
-1000,AVL_INSERT,684790,8743,OK,Insercion promedio
-1000,BST_SEARCH,3859,-,OK,Busqueda promedio
-1000,AVL_SEARCH,10179,-,OK,Busqueda promedio
-1000,AVL_ROTACIONES,-,699,OK,Rotaciones promedio
-1000,BST_ALTURA,-,21,OK,Altura BST promedio
+1000,BST_INSERT,248800,10807,OK,Insercion promedio
+1000,AVL_INSERT,595350,8733,OK,Insercion promedio
+1000,BST_SEARCH,3100,-,OK,Busqueda promedio
+1000,AVL_SEARCH,1710,-,OK,Busqueda promedio
+1000,AVL_ROTACIONES,-,690,OK,Rotaciones promedio
+1000,BST_ALTURA,-,22,OK,Altura BST promedio
 1000,AVL_ALTURA,-,12,OK,Altura AVL promedio
-1000,BST_INSERT_PEOR,9982001,499500,OK,Insercion ordenada
+1000,BST_INSERT_PEOR,11795700,499500,OK,Insercion ordenada
 1000,BST_ALTURA_PEOR,-,1000,OK,Altura degenerada
-1000,HEAP_EXTRACT_TIME,490,-,OK,Tiempo promedio de extraccion
-1000,HEAP_SWAPS,-,105913,OK,Numero de swaps en heap
-1000,LISTA_INSERT_ORDENADA,77630200,-,OK,Ordenacion constante tras insercion
-10000,BST_INSERT,1702109,156768,OK,Insercion promedio
-10000,AVL_INSERT,1570279,121032,OK,Insercion promedio
-10000,BST_SEARCH,5229,-,OK,Busqueda promedio
-10000,AVL_SEARCH,2680,-,OK,Busqueda promedio
-10000,AVL_ROTACIONES,-,6985,OK,Rotaciones promedio
+1000,HEAP_EXTRACT_TIME,407,-,OK,Tiempo promedio de extraccion
+1000,HEAP_SWAPS,-,105154,OK,Numero de swaps en heap
+1000,LISTA_INSERT_ORDENADA,71291600,-,OK,Ordenacion constante tras insercion
+10000,BST_INSERT,1531540,158775,OK,Insercion promedio
+10000,AVL_INSERT,1685900,121080,OK,Insercion promedio
+10000,BST_SEARCH,6140,-,OK,Busqueda promedio
+10000,AVL_SEARCH,6030,-,OK,Busqueda promedio
+10000,AVL_ROTACIONES,-,7001,OK,Rotaciones promedio
 10000,BST_ALTURA,-,31,OK,Altura BST promedio
 10000,AVL_ALTURA,-,16,OK,Altura AVL promedio
-10000,BST_INSERT_PEOR,132399500,49995000,OK,Insercion ordenada
+10000,BST_INSERT_PEOR,145869600,49995000,OK,Insercion ordenada
 10000,BST_ALTURA_PEOR,-,10000,OK,Altura degenerada
-10000,HEAP_EXTRACT_TIME,112,-,OK,Tiempo promedio de extraccion
-10000,HEAP_SWAPS,-,105561,OK,Numero de swaps en heap
-10000,LISTA_INSERT_ORDENADA,73754301,-,OK,Ordenacion constante tras insercion
-50000,BST_INSERT,8308030,941064,OK,Insercion promedio
-50000,AVL_INSERT,9503129,722819,OK,Insercion promedio
-50000,BST_SEARCH,3540,-,OK,Busqueda promedio
-50000,AVL_SEARCH,24690,-,OK,Busqueda promedio
-50000,AVL_ROTACIONES,-,34824,OK,Rotaciones promedio
-50000,BST_ALTURA,-,38,OK,Altura BST promedio
-50000,AVL_ALTURA,-,18,OK,Altura AVL promedio
-50000,BST_INSERT_PEOR,3454377599,1249975000,OK,Insercion ordenada
+10000,HEAP_EXTRACT_TIME,114,-,OK,Tiempo promedio de extraccion
+10000,HEAP_SWAPS,-,105887,OK,Numero de swaps en heap
+10000,LISTA_INSERT_ORDENADA,66584900,-,OK,Ordenacion constante tras insercion
+50000,BST_INSERT,8430410,941003,OK,Insercion promedio
+50000,AVL_INSERT,9412370,723322,OK,Insercion promedio
+50000,BST_SEARCH,3410,-,OK,Busqueda promedio
+50000,AVL_SEARCH,2350,-,OK,Busqueda promedio
+50000,AVL_ROTACIONES,-,34868,OK,Rotaciones promedio
+50000,BST_ALTURA,-,37,OK,Altura BST promedio
+50000,AVL_ALTURA,-,19,OK,Altura AVL promedio
+50000,BST_INSERT_PEOR,3169366200,1249975000,OK,Insercion ordenada
 50000,BST_ALTURA_PEOR,-,50000,OK,Altura degenerada
-50000,HEAP_EXTRACT_TIME,115,-,OK,Tiempo promedio de extraccion
-50000,HEAP_SWAPS,-,105826,OK,Numero de swaps en heap
-50000,LISTA_INSERT_ORDENADA,82750900,-,OK,Ordenacion constante tras insercion
-100000,BST_INSERT,20117789,2032218,OK,Insercion promedio
-100000,AVL_INSERT,23952900,1547487,OK,Insercion promedio
-100000,BST_SEARCH,2109,-,OK,Busqueda promedio
+50000,HEAP_EXTRACT_TIME,110,-,OK,Tiempo promedio de extraccion
+50000,HEAP_SWAPS,-,105657,OK,Numero de swaps en heap
+50000,LISTA_INSERT_ORDENADA,79426500,-,OK,Ordenacion constante tras insercion
+100000,BST_INSERT,21293870,2012659,OK,Insercion promedio
+100000,AVL_INSERT,23875460,1547360,OK,Insercion promedio
+100000,BST_SEARCH,2290,-,OK,Busqueda promedio
 100000,AVL_SEARCH,850,-,OK,Busqueda promedio
-100000,AVL_ROTACIONES,-,69910,OK,Rotaciones promedio
-100000,BST_ALTURA,-,40,OK,Altura BST promedio
+100000,AVL_ROTACIONES,-,69740,OK,Rotaciones promedio
+100000,BST_ALTURA,-,41,OK,Altura BST promedio
 100000,AVL_ALTURA,-,20,OK,Altura AVL promedio
-100000,BST_INSERT_PEOR,15601890600,704982704,OK,Insercion ordenada
+100000,BST_INSERT_PEOR,15148481300,704982704,OK,Insercion ordenada
 100000,BST_ALTURA_PEOR,-,100000,OK,Altura degenerada
-100000,HEAP_EXTRACT_TIME,138,-,OK,Tiempo promedio de extraccion
-100000,HEAP_SWAPS,-,105778,OK,Numero de swaps en heap
-100000,LISTA_INSERT_ORDENADA,102451600,-,OK,Ordenacion constante tras insercion
+100000,HEAP_EXTRACT_TIME,134,-,OK,Tiempo promedio de extraccion
+100000,HEAP_SWAPS,-,105205,OK,Numero de swaps en heap
+100000,LISTA_INSERT_ORDENADA,99388800,-,OK,Ordenacion constante tras insercion
