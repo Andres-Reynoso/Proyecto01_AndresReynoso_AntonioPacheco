@@ -22,10 +22,10 @@ public class AVL<T> {
         if (node == null) return new AVLNode<>(data);
 
         comparisons++;
-        int cmp = comparator.compare(data, node.data);
+        int cmp = comparator.compare(data, node.getData());
 
-        if (cmp < 0) node.left = insertRec(node.left, data);
-        else if (cmp > 0) node.right = insertRec(node.right, data);
+        if (cmp < 0) node.setLeft(insertRec(node.getLeft(), data));
+        else if (cmp > 0) node.setRight(insertRec(node.getRight(), data));
         else return node;
 
         updateHeight(node);
@@ -39,17 +39,19 @@ public class AVL<T> {
     private AVLNode<T> deleteRec(AVLNode<T> node, T data) {
         if (node == null) return null;
 
-        int cmp = comparator.compare(data, node.data);
+        int cmp = comparator.compare(data, node.getData());
 
-        if (cmp < 0) node.left = deleteRec(node.left, data);
-        else if (cmp > 0) node.right = deleteRec(node.right, data);
-        else {
-            if (node.left == null) return node.right;
-            if (node.right == null) return node.left;
+        if (cmp < 0) {
+            node.setLeft(deleteRec(node.getLeft(), data));
+        } else if (cmp > 0) {
+            node.setRight(deleteRec(node.getRight(), data));
+        } else {
+            if (node.getLeft() == null) return node.getRight();
+            if (node.getRight() == null) return node.getLeft();
 
-            AVLNode<T> temp = minValueNode(node.right);
-            node.data = temp.data;
-            node.right = deleteRec(node.right, temp.data);
+            AVLNode<T> temp = minValueNode(node.getRight());
+            node.setData(temp.getData());
+            node.setRight(deleteRec(node.getRight(), temp.getData()));
         }
 
         updateHeight(node);
@@ -57,20 +59,20 @@ public class AVL<T> {
     }
 
     private AVLNode<T> minValueNode(AVLNode<T> node) {
-        while (node.left != null) node = node.left;
+        while (node.getLeft() != null) node = node.getLeft();
         return node;
     }
 
     private void updateHeight(AVLNode<T> node) {
-        node.height = 1 + Math.max(getHeight(node.left), getHeight(node.right));
+        node.setHeight(1 + Math.max(getHeight(node.getLeft()), getHeight(node.getRight())));
     }
 
     private int getHeight(AVLNode<T> node) {
-        return (node == null) ? 0 : node.height;
+        return (node == null) ? 0 : node.getHeight();
     }
 
     private int getBalanceFactor(AVLNode<T> node) {
-        return getHeight(node.left) - getHeight(node.right);
+        return getHeight(node.getLeft()) - getHeight(node.getRight());
     }
 
     public int getBalanceFactorRoot() {
@@ -80,19 +82,23 @@ public class AVL<T> {
     private AVLNode<T> balance(AVLNode<T> node) {
         int bf = getBalanceFactor(node);
 
-        if (bf > 1 && getBalanceFactor(node.left) >= 0)
+        // Left Left
+        if (bf > 1 && getBalanceFactor(node.getLeft()) >= 0)
             return rightRotate(node);
 
+        // Left Right
         if (bf > 1) {
-            node.left = leftRotate(node.left);
+            node.setLeft(leftRotate(node.getLeft()));
             return rightRotate(node);
         }
 
-        if (bf < -1 && getBalanceFactor(node.right) <= 0)
+        // Right Right
+        if (bf < -1 && getBalanceFactor(node.getRight()) <= 0)
             return leftRotate(node);
 
+        // Right Left
         if (bf < -1) {
-            node.right = rightRotate(node.right);
+            node.setRight(rightRotate(node.getRight()));
             return leftRotate(node);
         }
 
@@ -100,11 +106,11 @@ public class AVL<T> {
     }
 
     private AVLNode<T> rightRotate(AVLNode<T> y) {
-        AVLNode<T> x = y.left;
-        AVLNode<T> t2 = x.right;
+        AVLNode<T> x = y.getLeft();
+        AVLNode<T> t2 = x.getRight();
 
-        x.right = y;
-        y.left = t2;
+        x.setRight(y);
+        y.setLeft(t2);
 
         updateHeight(y);
         updateHeight(x);
@@ -114,11 +120,11 @@ public class AVL<T> {
     }
 
     private AVLNode<T> leftRotate(AVLNode<T> x) {
-        AVLNode<T> y = x.right;
-        AVLNode<T> t2 = y.left;
+        AVLNode<T> y = x.getRight();
+        AVLNode<T> t2 = y.getLeft();
 
-        y.left = x;
-        x.right = t2;
+        y.setLeft(x);
+        x.setRight(t2);
 
         updateHeight(x);
         updateHeight(y);
@@ -135,38 +141,50 @@ public class AVL<T> {
         if (node == null) return false;
 
         comparisons++;
-        int cmp = comparator.compare(data, node.data);
+        int cmp = comparator.compare(data, node.getData());
 
         if (cmp == 0) return true;
-        return (cmp < 0) ? searchRec(node.left, data) : searchRec(node.right, data);
+        return (cmp < 0) ? searchRec(node.getLeft(), data)
+                : searchRec(node.getRight(), data);
     }
 
     // RECORRIDOS
-    public void inOrder() { inOrderRec(root); System.out.println(); }
-    public void preOrder() { preOrderRec(root); System.out.println(); }
-    public void postOrder() { postOrderRec(root); System.out.println(); }
+    public void inOrder() {
+        inOrderRec(root);
+        System.out.println();
+    }
+
+    public void preOrder() {
+        preOrderRec(root);
+        System.out.println();
+    }
+
+    public void postOrder() {
+        postOrderRec(root);
+        System.out.println();
+    }
 
     private void inOrderRec(AVLNode<T> node) {
         if (node != null) {
-            inOrderRec(node.left);
-            System.out.print(node.data + " ");
-            inOrderRec(node.right);
+            inOrderRec(node.getLeft());
+            System.out.print(node.getData() + " ");
+            inOrderRec(node.getRight());
         }
     }
 
     private void preOrderRec(AVLNode<T> node) {
         if (node != null) {
-            System.out.print(node.data + " ");
-            preOrderRec(node.left);
-            preOrderRec(node.right);
+            System.out.print(node.getData() + " ");
+            preOrderRec(node.getLeft());
+            preOrderRec(node.getRight());
         }
     }
 
     private void postOrderRec(AVLNode<T> node) {
         if (node != null) {
-            postOrderRec(node.left);
-            postOrderRec(node.right);
-            System.out.print(node.data + " ");
+            postOrderRec(node.getLeft());
+            postOrderRec(node.getRight());
+            System.out.print(node.getData() + " ");
         }
     }
 

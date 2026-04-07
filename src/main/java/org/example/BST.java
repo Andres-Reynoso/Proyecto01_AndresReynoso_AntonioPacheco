@@ -1,6 +1,8 @@
 package org.example;
 
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class BST<T> {
 
@@ -13,40 +15,63 @@ public class BST<T> {
         this.comparator = comparator;
     }
 
-    // INSERT SIN DUPLICADOS
+    public void resetStats() {
+        comparisons = 0;
+    }
+
+    // =====================
+    // INSERT (iterativo)
+    // =====================
     public void insert(T data) {
-        root = insertRec(root, data);
+        if (root == null) {
+            root = new BSTNode<>(data);
+            return;
+        }
+
+        BSTNode<T> current = root;
+        BSTNode<T> parent = null;
+
+        while (current != null) {
+            parent = current;
+            comparisons++;
+            int cmp = comparator.compare(data, current.getData());
+
+            if (cmp < 0) {
+                current = current.getLeft();
+            } else if (cmp > 0) {
+                current = current.getRight();
+            } else {
+                // 🔴 Duplicado: no insertar
+                return;
+            }
+        }
+
+        int cmp = comparator.compare(data, parent.getData());
+        if (cmp < 0) {
+            parent.setLeft(new BSTNode<>(data));
+        } else {
+            parent.setRight(new BSTNode<>(data));
+        }
     }
 
-    private BSTNode<T> insertRec(BSTNode<T> node, T data) {
-        if (node == null) return new BSTNode<>(data);
-
-        comparisons++;
-        int cmp = comparator.compare(data, node.data);
-
-        if (cmp < 0) node.left = insertRec(node.left, data);
-        else if (cmp > 0) node.right = insertRec(node.right, data);
-        // si cmp == 0 → ignorar duplicado
-
-        return node;
-    }
-
-    // SEARCH
+    // =====================
+    // SEARCH (iterativo)
+    // =====================
     public boolean search(T data) {
-        return searchRec(root, data);
+        BSTNode<T> current = root;
+        while (current != null) {
+            comparisons++;
+            int cmp = comparator.compare(data, current.getData());
+            if (cmp == 0) return true;
+            else if (cmp < 0) current = current.getLeft();
+            else current = current.getRight();
+        }
+        return false;
     }
 
-    private boolean searchRec(BSTNode<T> node, T data) {
-        if (node == null) return false;
-
-        comparisons++;
-        int cmp = comparator.compare(data, node.data);
-
-        if (cmp == 0) return true;
-        return (cmp < 0) ? searchRec(node.left, data) : searchRec(node.right, data);
-    }
-
-    // DELETE
+    // =====================
+    // DELETE (recursivo, pero seguro)
+    // =====================
     public void delete(T data) {
         root = deleteRec(root, data);
     }
@@ -54,61 +79,58 @@ public class BST<T> {
     private BSTNode<T> deleteRec(BSTNode<T> node, T data) {
         if (node == null) return null;
 
-        int cmp = comparator.compare(data, node.data);
+        comparisons++;
+        int cmp = comparator.compare(data, node.getData());
 
-        if (cmp < 0) node.left = deleteRec(node.left, data);
-        else if (cmp > 0) node.right = deleteRec(node.right, data);
-        else {
-            if (node.left == null) return node.right;
-            if (node.right == null) return node.left;
+        if (cmp < 0) {
+            node.setLeft(deleteRec(node.getLeft(), data));
+        } else if (cmp > 0) {
+            node.setRight(deleteRec(node.getRight(), data));
+        } else {
+            // Nodo encontrado
+            if (node.getLeft() == null) return node.getRight();
+            if (node.getRight() == null) return node.getLeft();
 
-            node.data = minValue(node.right);
-            node.right = deleteRec(node.right, node.data);
+            // Dos hijos: reemplazar con el mínimo del subárbol derecho
+            T min = minValue(node.getRight());
+            node.setData(min);
+            node.setRight(deleteRec(node.getRight(), min));
         }
 
         return node;
     }
 
     private T minValue(BSTNode<T> node) {
-        while (node.left != null) node = node.left;
-        return node.data;
-    }
-
-    // RECORRIDOS
-    public void inOrder() { inOrderRec(root); System.out.println(); }
-    public void preOrder() { preOrderRec(root); System.out.println(); }
-    public void postOrder() { postOrderRec(root); System.out.println(); }
-
-    private void inOrderRec(BSTNode<T> node) {
-        if (node != null) {
-            inOrderRec(node.left);
-            System.out.print(node.data + " ");
-            inOrderRec(node.right);
+        while (node.getLeft() != null) {
+            comparisons++;
+            node = node.getLeft();
         }
+        return node.getData();
     }
 
-    private void preOrderRec(BSTNode<T> node) {
-        if (node != null) {
-            System.out.print(node.data + " ");
-            preOrderRec(node.left);
-            preOrderRec(node.right);
-        }
-    }
-
-    private void postOrderRec(BSTNode<T> node) {
-        if (node != null) {
-            postOrderRec(node.left);
-            postOrderRec(node.right);
-            System.out.print(node.data + " ");
-        }
-    }
-
+    // =====================
+    // HEIGHT (iterativo con BFS)
+    // =====================
     public int height() {
-        return heightRec(root);
+        if (root == null) return 0;
+
+        Queue<BSTNode<T>> queue = new LinkedList<>();
+        queue.add(root);
+        int height = 0;
+
+        while (!queue.isEmpty()) {
+            int levelSize = queue.size();
+            for (int i = 0; i < levelSize; i++) {
+                BSTNode<T> node = queue.poll();
+                if (node.getLeft() != null) queue.add(node.getLeft());
+                if (node.getRight() != null) queue.add(node.getRight());
+            }
+            height++;
+        }
+        return height;
     }
 
-    private int heightRec(BSTNode<T> node) {
-        if (node == null) return 0;
-        return 1 + Math.max(heightRec(node.left), heightRec(node.right));
+    public BSTNode<T> getRoot() {
+        return root;
     }
 }

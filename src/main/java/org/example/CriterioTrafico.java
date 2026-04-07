@@ -1,6 +1,6 @@
-package org.example;
+    package org.example;
 
-@FunctionalInterface
-public interface CriterioTrafico<T> {
-    boolean evaluar(T t, int umbral);
-}
+    @FunctionalInterface
+    public interface CriterioTrafico<T> {
+        boolean evaluar(T t, int umbral);
+    }

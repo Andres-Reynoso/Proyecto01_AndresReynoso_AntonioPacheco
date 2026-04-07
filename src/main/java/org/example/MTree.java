@@ -78,7 +78,6 @@ public class MTree<T> {
     public double branchingFactor() {
         int totalChildren = countAllChildren(root);
         int totalNodes = countNodes(root);
-
         return (double) totalChildren / totalNodes;
     }
 
@@ -100,5 +99,26 @@ public class MTree<T> {
             count += countNodes(child);
         }
         return count;
+    }
+
+    // ✅ FIX 2: contar intersecciones (hojas) bajo un nodo con nombre dado
+    public int countInterseccionesPorDistrito(String distrito) {
+        MNode<T> nodoDistrito = findNode(root, distrito);
+        if (nodoDistrito == null) {
+            System.out.println("Distrito no encontrado: " + distrito);
+            return 0;
+        }
+        return countLeavesRec(nodoDistrito);
+    }
+
+    private MNode<T> findNode(MNode<T> node, String target) {
+        if (node == null) return null;
+        if (node.getData().toString().equals(target)) return node;
+
+        for (MNode<T> child : node.getChildren()) {
+            MNode<T> result = findNode(child, target);
+            if (result != null) return result;
+        }
+        return null;
     }
 }

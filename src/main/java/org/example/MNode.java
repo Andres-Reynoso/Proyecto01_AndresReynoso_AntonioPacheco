@@ -28,4 +28,12 @@ public class MNode<T> {
     public T getData() {
         return data;
     }
+
+    public int getMaxChildren() {
+        return maxChildren;
+    }
+
+    public int getCurrentChildrenCount() {
+        return children.size();
+    }
 }

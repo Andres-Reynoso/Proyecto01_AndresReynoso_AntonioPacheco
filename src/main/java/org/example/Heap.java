@@ -1,108 +1,173 @@
 package org.example;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.function.BiPredicate;
 
 public class Heap<T> {
 
-    private T[] heap;
-    private int size;
-    private int capacity;
+    private ArrayList<T> heap;
     private Comparator<T> comparator;
 
-    public int swaps = 0;
+    // Métricas
+    private int swaps = 0;
 
-    @SuppressWarnings("unchecked")
-    public Heap(int capacity, Comparator<T> comparator) {
-        this.capacity = capacity;
-        this.heap = (T[]) new Object[capacity];
+    // Criterio dinámico
+    private BiPredicate<T, Integer> criterio;
+
+    public Heap(int capacidad, Comparator<T> comparator) {
+        this.heap = new ArrayList<>(capacidad);
         this.comparator = comparator;
     }
 
+    // =====================
+    // OPERACIONES BÁSICAS
+    // =====================
+
     public void insert(T value) {
-        if (size == capacity) grow();
-        heap[size] = value;
-        heapifyUp(size++);
+        heap.add(value);
+        heapifyUp(heap.size() - 1);
     }
 
     public T extract() {
-        if (size == 0) return null;
+        if (heap.isEmpty()) return null;
 
-        T root = heap[0];
-        heap[0] = heap[--size];
-        heap[size] = null;
+        T root = heap.get(0);
+        T last = heap.remove(heap.size() - 1);
 
-        heapifyDown(0);
+        if (!heap.isEmpty()) {
+            heap.set(0, last);
+            heapifyDown(0);
+        }
+
         return root;
     }
 
-    public long extractWithTime() {
-        long ini = System.nanoTime();
-        extract();
-        return System.nanoTime() - ini;
+    public boolean isEmpty() {
+        return heap.isEmpty();
     }
 
-    // 🔥 CORREGIDO
-    public void updatePriority(T element, T newElement) {
-        for (int i = 0; i < size; i++) {
-            if (heap[i].equals(element)) {
-                heap[i] = newElement;
-                heapifyUp(i);
-                heapifyDown(i);
-                return;
-            }
-        }
+    // =====================
+    // TIEMPO DE EXTRACCIÓN (Benchmark)
+    // =====================
+
+    public T extractWithTime() {
+        long start = System.nanoTime();
+
+        T result = extract();
+
+        long end = System.nanoTime();
+        long tiempo = end - start;
+
+        System.out.println("Tiempo de extracción (ns): " + tiempo);
+
+        return result;
     }
 
-    // 🔥 NUEVO
-    public void setComparator(Comparator<T> newComparator) {
-        this.comparator = newComparator;
+    // =====================
+    // MÉTRICAS
+    // =====================
+
+    public int getSwaps() {
+        return swaps;
+    }
+
+    // =====================
+    // COMPARATOR DINÁMICO
+    // =====================
+
+    public void setComparator(Comparator<T> comparator) {
+        this.comparator = comparator;
         rebuildHeap();
     }
 
     private void rebuildHeap() {
-        for (int i = size / 2 - 1; i >= 0; i--) {
-            heapifyDown(i);
+        ArrayList<T> copia = new ArrayList<>(heap);
+        heap.clear();
+
+        for (T item : copia) {
+            insert(item);
         }
     }
 
-    private void heapifyUp(int i) {
-        while (i > 0) {
-            int p = (i - 1) / 2;
-            if (comparator.compare(heap[i], heap[p]) < 0) {
-                swap(i, p);
-                i = p;
-            } else break;
+    // =====================
+    // CRITERIO (Main)
+    // =====================
+
+    public void setCriterio(BiPredicate<T, Integer> criterio) {
+        this.criterio = criterio;
+    }
+
+    public void procesarConCriterio(int valor) {
+        if (criterio == null) {
+            throw new IllegalStateException("Criterio no definido");
+        }
+
+        for (T item : heap) {
+            if (criterio.test(item, valor)) {
+                System.out.println("Cumple criterio: " + item);
+            }
         }
     }
 
-    private void heapifyDown(int i) {
+    // =====================
+    // UPDATE PRIORITY
+    // =====================
+
+    public void updatePriority(T oldValue, T newValue) {
+        int index = heap.indexOf(oldValue);
+
+        if (index == -1) return;
+
+        heap.set(index, newValue);
+
+        heapifyUp(index);
+        heapifyDown(index);
+    }
+
+    // =====================
+    // HEAPIFY
+    // =====================
+
+    private void heapifyUp(int index) {
+        while (index > 0) {
+            int parent = (index - 1) / 2;
+
+            if (comparator.compare(heap.get(index), heap.get(parent)) >= 0) break;
+
+            swap(index, parent);
+            index = parent;
+        }
+    }
+
+    private void heapifyDown(int index) {
+        int size = heap.size();
+
         while (true) {
-            int l = 2 * i + 1, r = 2 * i + 2, s = i;
+            int left = 2 * index + 1;
+            int right = 2 * index + 2;
+            int best = index;
 
-            if (l < size && comparator.compare(heap[l], heap[s]) < 0) s = l;
-            if (r < size && comparator.compare(heap[r], heap[s]) < 0) s = r;
+            if (left < size && comparator.compare(heap.get(left), heap.get(best)) < 0) {
+                best = left;
+            }
 
-            if (s == i) break;
+            if (right < size && comparator.compare(heap.get(right), heap.get(best)) < 0) {
+                best = right;
+            }
 
-            swap(i, s);
-            i = s;
+            if (best == index) break;
+
+            swap(index, best);
+            index = best;
         }
     }
 
     private void swap(int i, int j) {
-        T tmp = heap[i];
-        heap[i] = heap[j];
-        heap[j] = tmp;
+        T temp = heap.get(i);
+        heap.set(i, heap.get(j));
+        heap.set(j, temp);
+
         swaps++;
-    }
-
-    private void grow() {
-        capacity *= 2;
-        heap = Arrays.copyOf(heap, capacity);
-    }
-
-    public boolean isEmpty() {
-        return size == 0;
     }
 }

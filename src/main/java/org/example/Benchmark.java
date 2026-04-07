@@ -13,10 +13,10 @@ public class Benchmark {
     private static Evento generarEvento(int id) {
         return new Evento(
                 id,
-                random.nextInt(10),     // prioridad
-                random.nextInt(100),    // congestion
+                random.nextInt(10),
+                random.nextInt(100),
                 System.currentTimeMillis(),
-                random.nextInt(10)      // riesgo
+                random.nextInt(10)
         );
     }
 
@@ -24,21 +24,16 @@ public class Benchmark {
 
         try (PrintWriter writer = new PrintWriter(new FileWriter("resultados.csv"))) {
 
-            // 🔥 Header claro (importante)
-            writer.println("N,Operacion,Tiempo_ns,Valor,Estado");
+            writer.println("N,Operacion,Tiempo_ns,Valor,Estado,Descripcion");
 
             for (int n : N_VALUES) {
 
                 System.out.println("Procesando N = " + n);
 
-                long totalBSTInsert = 0;
-                long totalAVLInsert = 0;
-                long totalBSTSearch = 0;
-                long totalAVLSearch = 0;
-
-                int totalBSTComp = 0;
-                int totalAVLComp = 0;
-                int totalAVLRot = 0;
+                long totalBSTInsert = 0, totalAVLInsert = 0;
+                long totalBSTSearch = 0, totalAVLSearch = 0;
+                int totalBSTComp = 0, totalAVLComp = 0, totalAVLRot = 0;
+                int totalBSTHeight = 0, totalAVLHeight = 0;
 
                 for (int r = 0; r < REPETICIONES; r++) {
 
@@ -49,7 +44,7 @@ public class Benchmark {
                     BST<Integer> bst = new BST<>(Integer::compareTo);
                     AVL<Integer> avl = new AVL<>(Integer::compareTo);
 
-                    // 🔹 INSERT
+                    // INSERT
                     long iniBST = System.nanoTime();
                     for (int val : datos) bst.insert(val);
                     long finBST = System.nanoTime();
@@ -61,7 +56,7 @@ public class Benchmark {
                     totalBSTInsert += (finBST - iniBST);
                     totalAVLInsert += (finAVL - iniAVL);
 
-                    // 🔹 SEARCH
+                    // SEARCH
                     int target = datos.get(random.nextInt(n));
 
                     long iniSB = System.nanoTime();
@@ -75,54 +70,80 @@ public class Benchmark {
                     totalBSTSearch += (finSB - iniSB);
                     totalAVLSearch += (finSA - iniSA);
 
-                    // 🔹 MÉTRICAS
                     totalBSTComp += bst.comparisons;
                     totalAVLComp += avl.comparisons;
                     totalAVLRot += avl.rotations;
+                    totalBSTHeight += bst.height();
+                    totalAVLHeight += avl.height();
                 }
 
-                // 🔥 INSERT
-                writer.println(n + ",BST_INSERT," + (totalBSTInsert / REPETICIONES) + "," + (totalBSTComp / REPETICIONES) + ",OK");
-                writer.println(n + ",AVL_INSERT," + (totalAVLInsert / REPETICIONES) + "," + (totalAVLComp / REPETICIONES) + ",OK");
+                // INSERT promedio
+                writer.println(n + ",BST_INSERT," + (totalBSTInsert / REPETICIONES) + "," + (totalBSTComp / REPETICIONES) + ",OK,Insercion promedio");
+                writer.println(n + ",AVL_INSERT," + (totalAVLInsert / REPETICIONES) + "," + (totalAVLComp / REPETICIONES) + ",OK,Insercion promedio");
 
-                // 🔥 SEARCH
-                writer.println(n + ",BST_SEARCH," + (totalBSTSearch / REPETICIONES) + ",- ,OK");
-                writer.println(n + ",AVL_SEARCH," + (totalAVLSearch / REPETICIONES) + ",- ,OK");
+                // SEARCH
+                writer.println(n + ",BST_SEARCH," + (totalBSTSearch / REPETICIONES) + ",-,OK,Busqueda promedio");
+                writer.println(n + ",AVL_SEARCH," + (totalAVLSearch / REPETICIONES) + ",-,OK,Busqueda promedio");
 
-                // 🔥 ROTACIONES (separado correctamente)
-                writer.println(n + ",AVL_ROTACIONES,-," + (totalAVLRot / REPETICIONES) + ",OK");
+                // ROTACIONES AVL
+                writer.println(n + ",AVL_ROTACIONES,-," + (totalAVLRot / REPETICIONES) + ",OK,Rotaciones promedio");
 
-                // 🔥 HEAP EVENTOS
+                // ALTURAS
+                writer.println(n + ",BST_ALTURA,-," + (totalBSTHeight / REPETICIONES) + ",OK,Altura BST promedio");
+                writer.println(n + ",AVL_ALTURA,-," + (totalAVLHeight / REPETICIONES) + ",OK,Altura AVL promedio");
+
+                // PEOR CASO BST
+                BST<Integer> bstWorst = new BST<>(Integer::compareTo);
+
+                long iniBSTWorst = System.nanoTime();
+                for (int i = 0; i < n; i++) bstWorst.insert(i);
+                long finBSTWorst = System.nanoTime();
+
+                writer.println(n + ",BST_INSERT_PEOR," + (finBSTWorst - iniBSTWorst) + "," + bstWorst.comparisons + ",OK,Insercion ordenada");
+                writer.println(n + ",BST_ALTURA_PEOR,-," + bstWorst.height() + ",OK,Altura degenerada");
+
+                // =========================
+                // HEAP (FIX COMPLETO)
+                // =========================
+
                 Heap<Evento> heap = new Heap<>(10000, EventoComparators.porPrioridad);
 
                 for (int i = 0; i < 10000; i++) {
                     heap.insert(generarEvento(i));
                 }
 
-                long totalExtract = 0;
+                long totalExtractTime = 0;
+
                 for (int i = 0; i < 10000; i++) {
-                    totalExtract += heap.extractWithTime();
+                    long start = System.nanoTime();
+                    heap.extract(); // usar extract normal
+                    long end = System.nanoTime();
+
+                    totalExtractTime += (end - start);
                 }
 
-                writer.println(n + ",HEAP_EVENTOS," + (totalExtract / 10000) + ",- ,OK");
+                writer.println(n + ",HEAP_EXTRACT_TIME," + (totalExtractTime / 10000) + ",-,OK,Tiempo promedio de extraccion");
+                writer.println(n + ",HEAP_SWAPS,-," + heap.getSwaps() + ",OK,Numero de swaps en heap");
 
-                // 🔥 LISTA EVENTOS
+                // LISTA vs HEAP
                 List<Evento> lista = new ArrayList<>();
 
                 long iniLista = System.nanoTime();
+
                 for (int i = 0; i < 10000; i++) {
                     lista.add(generarEvento(i));
                     lista.sort(EventoComparators.porPrioridad);
                 }
+
                 long finLista = System.nanoTime();
 
-                writer.println(n + ",LISTA_EVENTOS," + (finLista - iniLista) + ",- ,OK");
+                writer.println(n + ",LISTA_INSERT_ORDENADA," + (finLista - iniLista) + ",-,OK,Ordenacion constante tras insercion");
             }
 
-            System.out.println("Benchmark completado.");
+            System.out.println("Benchmark completado correctamente.");
 
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error en benchmark: " + e.getMessage());
         }
     }
 }
