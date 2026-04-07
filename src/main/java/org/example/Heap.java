@@ -8,10 +8,10 @@ public class Heap<T> {
     private ArrayList<T> heap;
     private Comparator<T> comparator;
 
-    // Métricas
+    // Métrica: número total de intercambios realizados
     private int swaps = 0;
 
-    // Criterio dinámico — usa la interfaz funcional propia del proyecto
+    // Criterio dinámico para evaluación de elementos
     private CriterioTrafico<T> criterio;
 
     public Heap(int capacidad, Comparator<T> comparator) {
@@ -19,15 +19,13 @@ public class Heap<T> {
         this.comparator = comparator;
     }
 
-    // =====================
-    // OPERACIONES BÁSICAS
-    // =====================
-
+    // Inserta un elemento y mantiene la propiedad de heap
     public void insert(T value) {
         heap.add(value);
         heapifyUp(heap.size() - 1);
     }
 
+    // Extrae el elemento con mayor prioridad según el comparator
     public T extract() {
         if (heap.isEmpty()) return null;
 
@@ -46,35 +44,23 @@ public class Heap<T> {
         return heap.isEmpty();
     }
 
-    // =====================
-    // TIEMPO DE EXTRACCIÓN (Benchmark)
-    // =====================
-
-    public T extractWithTime() {
-        long start = System.nanoTime();
-        T result = extract();
-        long end = System.nanoTime();
-        System.out.println("Tiempo de extracción (ns): " + (end - start));
-        return result;
+    // Reinicia el contador de swaps para mediciones independientes
+    public void resetSwaps() {
+        swaps = 0;
     }
 
-    // =====================
-    // MÉTRICAS
-    // =====================
-
+    // Devuelve el número total de intercambios realizados
     public int getSwaps() {
         return swaps;
     }
 
-    // =====================
-    // COMPARATOR DINÁMICO
-    // =====================
-
+    // Permite cambiar el criterio de orden dinámicamente
     public void setComparator(Comparator<T> comparator) {
         this.comparator = comparator;
         rebuildHeap();
     }
 
+    // Reconstruye el heap cuando cambia el comparator
     private void rebuildHeap() {
         ArrayList<T> copia = new ArrayList<>(heap);
         heap.clear();
@@ -83,14 +69,11 @@ public class Heap<T> {
         }
     }
 
-    // =====================
-    // CRITERIO (interfaz funcional propia)
-    // =====================
-
     public void setCriterio(CriterioTrafico<T> criterio) {
         this.criterio = criterio;
     }
 
+    // Evalúa los elementos del heap según un criterio externo
     public void procesarConCriterio(int umbral) {
         if (criterio == null) {
             throw new IllegalStateException("Criterio no definido");
@@ -102,10 +85,7 @@ public class Heap<T> {
         }
     }
 
-    // =====================
-    // UPDATE PRIORITY
-    // =====================
-
+    // Actualiza la prioridad de un elemento existente
     public void updatePriority(T oldValue, T newValue) {
         int index = heap.indexOf(oldValue);
         if (index == -1) return;
@@ -115,10 +95,7 @@ public class Heap<T> {
         heapifyDown(index);
     }
 
-    // =====================
-    // HEAPIFY
-    // =====================
-
+    // Reorganiza hacia arriba
     private void heapifyUp(int index) {
         while (index > 0) {
             int parent = (index - 1) / 2;
@@ -128,6 +105,7 @@ public class Heap<T> {
         }
     }
 
+    // Reorganiza hacia abajo
     private void heapifyDown(int index) {
         int size = heap.size();
 
@@ -149,6 +127,7 @@ public class Heap<T> {
         }
     }
 
+    // Intercambia dos posiciones y contabiliza el swap
     private void swap(int i, int j) {
         T temp = heap.get(i);
         heap.set(i, heap.get(j));

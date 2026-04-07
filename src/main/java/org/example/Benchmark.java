@@ -44,7 +44,13 @@ public class Benchmark {
                     BST<Integer> bst = new BST<>(Integer::compareTo);
                     AVL<Integer> avl = new AVL<>(Integer::compareTo);
 
+                    // =====================
                     // INSERT
+                    // =====================
+                    bst.resetStats();
+                    avl.comparisons = 0;
+                    avl.rotations = 0;
+
                     long iniBST = System.nanoTime();
                     for (int val : datos) bst.insert(val);
                     long finBST = System.nanoTime();
@@ -56,8 +62,20 @@ public class Benchmark {
                     totalBSTInsert += (finBST - iniBST);
                     totalAVLInsert += (finAVL - iniAVL);
 
+                    totalBSTComp += bst.comparisons;
+                    totalAVLComp += avl.comparisons;
+                    totalAVLRot += avl.rotations;
+
+                    totalBSTHeight += bst.height();
+                    totalAVLHeight += avl.height();
+
+                    // =====================
                     // SEARCH
+                    // =====================
                     int target = datos.get(random.nextInt(n));
+
+                    bst.resetStats();
+                    avl.comparisons = 0;
 
                     long iniSB = System.nanoTime();
                     bst.search(target);
@@ -69,30 +87,22 @@ public class Benchmark {
 
                     totalBSTSearch += (finSB - iniSB);
                     totalAVLSearch += (finSA - iniSA);
-
-                    totalBSTComp += bst.comparisons;
-                    totalAVLComp += avl.comparisons;
-                    totalAVLRot += avl.rotations;
-                    totalBSTHeight += bst.height();
-                    totalAVLHeight += avl.height();
                 }
 
-                // INSERT promedio
                 writer.println(n + ",BST_INSERT," + (totalBSTInsert / REPETICIONES) + "," + (totalBSTComp / REPETICIONES) + ",OK,Insercion promedio");
                 writer.println(n + ",AVL_INSERT," + (totalAVLInsert / REPETICIONES) + "," + (totalAVLComp / REPETICIONES) + ",OK,Insercion promedio");
 
-                // SEARCH
                 writer.println(n + ",BST_SEARCH," + (totalBSTSearch / REPETICIONES) + ",-,OK,Busqueda promedio");
                 writer.println(n + ",AVL_SEARCH," + (totalAVLSearch / REPETICIONES) + ",-,OK,Busqueda promedio");
 
-                // ROTACIONES AVL
                 writer.println(n + ",AVL_ROTACIONES,-," + (totalAVLRot / REPETICIONES) + ",OK,Rotaciones promedio");
 
-                // ALTURAS
-                writer.println(n + ",BST_ALTURA,-," + (totalBSTHeight / REPETICIONES) + ",OK,Altura BST promedio");
-                writer.println(n + ",AVL_ALTURA,-," + (totalAVLHeight / REPETICIONES) + ",OK,Altura AVL promedio");
+                writer.println(n + ",BST_ALTURA,-," + (totalBSTHeight / REPETICIONES) + ",OK,Altura promedio");
+                writer.println(n + ",AVL_ALTURA,-," + (totalAVLHeight / REPETICIONES) + ",OK,Altura promedio");
 
+                // =====================
                 // PEOR CASO BST
+                // =====================
                 BST<Integer> bstWorst = new BST<>(Integer::compareTo);
 
                 long iniBSTWorst = System.nanoTime();
@@ -102,42 +112,46 @@ public class Benchmark {
                 writer.println(n + ",BST_INSERT_PEOR," + (finBSTWorst - iniBSTWorst) + "," + bstWorst.comparisons + ",OK,Insercion ordenada");
                 writer.println(n + ",BST_ALTURA_PEOR,-," + bstWorst.height() + ",OK,Altura degenerada");
 
-                // =========================
-                // HEAP (FIX COMPLETO)
-                // =========================
-
+                // =====================
+                // HEAP
+                // =====================
                 Heap<Evento> heap = new Heap<>(10000, EventoComparators.porPrioridad);
 
                 for (int i = 0; i < 10000; i++) {
                     heap.insert(generarEvento(i));
                 }
 
+                heap.resetSwaps();
+
                 long totalExtractTime = 0;
 
                 for (int i = 0; i < 10000; i++) {
                     long start = System.nanoTime();
-                    heap.extract(); // usar extract normal
+                    heap.extract();
                     long end = System.nanoTime();
 
                     totalExtractTime += (end - start);
                 }
 
-                writer.println(n + ",HEAP_EXTRACT_TIME," + (totalExtractTime / 10000) + ",-,OK,Tiempo promedio de extraccion");
-                writer.println(n + ",HEAP_SWAPS,-," + heap.getSwaps() + ",OK,Numero de swaps en heap");
+                writer.println(n + ",HEAP_EXTRACT_TIME," + (totalExtractTime / 10000) + ",-,OK,Tiempo promedio extraccion");
+                writer.println(n + ",HEAP_SWAPS,-," + (heap.getSwaps() / 10000) + ",OK,Swaps promedio por extraccion");
 
-                // LISTA vs HEAP
+                // =====================
+                // LISTA vs HEAP (corregido)
+                // =====================
                 List<Evento> lista = new ArrayList<>();
 
                 long iniLista = System.nanoTime();
 
                 for (int i = 0; i < 10000; i++) {
                     lista.add(generarEvento(i));
-                    lista.sort(EventoComparators.porPrioridad);
                 }
+
+                Collections.sort(lista, EventoComparators.porPrioridad);
 
                 long finLista = System.nanoTime();
 
-                writer.println(n + ",LISTA_INSERT_ORDENADA," + (finLista - iniLista) + ",-,OK,Ordenacion constante tras insercion");
+                writer.println(n + ",LISTA_SORT," + (finLista - iniLista) + ",-,OK,Ordenamiento total de lista");
             }
 
             System.out.println("Benchmark completado correctamente.");

@@ -10,10 +10,10 @@ public class Main {
         System.out.println("=== MOTOR INTELIGENTE DE GESTIÓN DE TRÁFICO ===\n");
 
         // ============================================================
-        // 1. ÁRBOL MULTI-CAMINO (MTree) — Jerarquía urbana
+        // 1. ARBOL MULTI-CAMINO
         // ============================================================
         System.out.println("========================================");
-        System.out.println(">>> ÁRBOL MULTI-CAMINO (M-ary Tree)");
+        System.out.println(">>> ARBOL MULTI-CAMINO");
         System.out.println("========================================");
 
         MTree<String> ciudad = cargarCiudadDesdeArchivo("datos_ciudad.txt");
@@ -21,10 +21,10 @@ public class Main {
         System.out.println(">> Recorrido por niveles:");
         ciudad.levelOrder();
 
-        System.out.println("Profundidad máxima de la red: " + ciudad.maxDepth());
-        System.out.println("Hojas (intersecciones): " + ciudad.countLeaves());
+        System.out.println("Profundidad maxima: " + ciudad.maxDepth());
+        System.out.println("Hojas: " + ciudad.countLeaves());
         System.out.println("Nodos internos: " + ciudad.countInternalNodes());
-        System.out.println("Factor promedio de ramificación: " + String.format("%.2f", ciudad.branchingFactor()));
+        System.out.println("Factor de ramificacion: " + ciudad.branchingFactor());
 
         System.out.println("Intersecciones en Distrito1: " +
                 ciudad.countInterseccionesPorDistrito("Distrito1"));
@@ -34,10 +34,10 @@ public class Main {
                 ciudad.countInterseccionesPorDistrito("Norte"));
 
         // ============================================================
-        // 2. BST y AVL — Indexación de intersecciones desde archivo
+        // 2. BST Y AVL
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> INDEXACIÓN: ¿Usar AVL o BST? (avl/bst)");
+        System.out.println(">>> INDEXACION AVL O BST");
         System.out.println("========================================");
 
         Scanner sc = new Scanner(System.in);
@@ -46,37 +46,45 @@ public class Main {
         List<Interseccion> intersecciones = cargarIntersecciones("datos_ciudad.txt");
 
         if (eleccion.equals("avl")) {
-            AVL<Interseccion> avl = new AVL<>(Comparator.comparingInt(Interseccion::getId));
-            for (Interseccion i : intersecciones) avl.insert(i);
 
-            System.out.println("\n>> Recorridos AVL:");
-            System.out.print("InOrder:   "); avl.inOrder();
-            System.out.print("PreOrder:  "); avl.preOrder();
+            AVL<Interseccion> avl = new AVL<>(Comparator.comparingInt(Interseccion::getId));
+
+            for (Interseccion i : intersecciones) {
+                avl.insert(i);
+            }
+
+            System.out.println("\nRecorridos AVL:");
+            System.out.print("InOrder: "); avl.inOrder();
+            System.out.print("PreOrder: "); avl.preOrder();
             System.out.print("PostOrder: "); avl.postOrder();
 
-            System.out.println("AVL altura: " + avl.height());
-            System.out.println("AVL rotaciones: " + avl.rotations);
-            System.out.println("AVL comparaciones: " + avl.comparisons);
-            System.out.println("AVL factor de balance (raíz): " + avl.getBalanceFactorRoot());
+            System.out.println("Altura AVL: " + avl.height());
+            System.out.println("Rotaciones AVL: " + avl.rotations);
+            System.out.println("Comparaciones AVL: " + avl.comparisons);
+            System.out.println("Factor de balance raiz: " + avl.getBalanceFactorRoot());
 
         } else {
-            BST<Interseccion> bst = new BST<>(Comparator.comparingInt(Interseccion::getId));
-            for (Interseccion i : intersecciones) bst.insert(i);
 
-            System.out.println("\n>> Recorridos BST:");
-            System.out.print("InOrder:   "); bst.inOrder();
-            System.out.print("PreOrder:  "); bst.preOrder();
+            BST<Interseccion> bst = new BST<>(Comparator.comparingInt(Interseccion::getId));
+
+            for (Interseccion i : intersecciones) {
+                bst.insert(i);
+            }
+
+            System.out.println("\nRecorridos BST:");
+            System.out.print("InOrder: "); bst.inOrder();
+            System.out.print("PreOrder: "); bst.preOrder();
             System.out.print("PostOrder: "); bst.postOrder();
 
-            System.out.println("BST altura: " + bst.height());
-            System.out.println("BST comparaciones: " + bst.comparisons);
+            System.out.println("Altura BST: " + bst.height());
+            System.out.println("Comparaciones BST: " + bst.comparisons);
         }
 
         // ============================================================
-        // 3. BST vs AVL — Comparación experimental (1000 aleatorios)
+        // 3. COMPARACION BST VS AVL
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> BST vs AVL (1000 elementos aleatorios)");
+        System.out.println(">>> BST VS AVL (1000)");
         System.out.println("========================================");
 
         BST<Integer> bst = new BST<>(Integer::compareTo);
@@ -89,18 +97,17 @@ public class Main {
             avl.insert(val);
         }
 
-        System.out.println("Altura BST:          " + bst.height());
-        System.out.println("Altura AVL:          " + avl.height());
-        System.out.println("Balance AVL (raíz):  " + avl.getBalanceFactorRoot());
-        System.out.println("Comparaciones BST:   " + bst.comparisons);
-        System.out.println("Comparaciones AVL:   " + avl.comparisons);
-        System.out.println("Rotaciones AVL:      " + avl.rotations);
+        System.out.println("Altura BST: " + bst.height());
+        System.out.println("Altura AVL: " + avl.height());
+        System.out.println("Comparaciones BST: " + bst.comparisons);
+        System.out.println("Comparaciones AVL: " + avl.comparisons);
+        System.out.println("Rotaciones AVL: " + avl.rotations);
 
         // ============================================================
-        // 4. BST vs AVL — Búsqueda bajo 100,000 intersecciones
+        // 4. BUSQUEDA 100K
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> BST vs AVL — Búsqueda con 100,000 elementos");
+        System.out.println(">>> BUSQUEDA 100K");
         System.out.println("========================================");
 
         BST<Integer> bst100k = new BST<>(Integer::compareTo);
@@ -127,18 +134,18 @@ public class Main {
         avl100k.search(target);
         long t4 = System.nanoTime();
 
-        System.out.println("Altura BST (100k):         " + bst100k.height());
-        System.out.println("Altura AVL (100k):         " + avl100k.height());
-        System.out.println("Tiempo búsqueda BST (ns):  " + (t2 - t1));
-        System.out.println("Tiempo búsqueda AVL (ns):  " + (t4 - t3));
-        System.out.println("Comparaciones BST:         " + bst100k.comparisons);
-        System.out.println("Comparaciones AVL:         " + avl100k.comparisons);
+        System.out.println("Altura BST: " + bst100k.height());
+        System.out.println("Altura AVL: " + avl100k.height());
+        System.out.println("Tiempo BST: " + (t2 - t1));
+        System.out.println("Tiempo AVL: " + (t4 - t3));
+        System.out.println("Comparaciones BST: " + bst100k.comparisons);
+        System.out.println("Comparaciones AVL: " + avl100k.comparisons);
 
         // ============================================================
-        // 5. HEAP — Cola de prioridad de eventos
+        // 5. HEAP
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> HEAP DE EVENTOS");
+        System.out.println(">>> HEAP");
         System.out.println("========================================");
 
         Heap<Evento> heap = new Heap<>(10, EventoComparators.porPrioridad.reversed());
@@ -151,21 +158,24 @@ public class Main {
         heap.insert(e2);
         heap.insert(e3);
 
-        System.out.println("Extracción por prioridad (mayor primero):");
-        while (!heap.isEmpty()) System.out.println("  " + heap.extract());
+        while (!heap.isEmpty()) {
+            System.out.println(heap.extract());
+        }
 
         // ============================================================
-        // 6. CRITERIO DE TRÁFICO — Inyección de comportamiento
+        // 6. CRITERIO DINAMICO
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> CRITERIO DE TRÁFICO (congestion > umbral = 40)");
+        System.out.println(">>> CRITERIO");
         System.out.println("========================================");
 
         Heap<Evento> heap2 = new Heap<>(10, EventoComparators.porPrioridad);
         heap2.setCriterio((evento, umbral) -> evento.getCongestion() > umbral);
+
         heap2.insert(e1);
         heap2.insert(e2);
         heap2.insert(e3);
+
         heap2.procesarConCriterio(40);
 
         // ============================================================
@@ -176,138 +186,110 @@ public class Main {
         System.out.println("========================================");
 
         Heap<Evento> heap3 = new Heap<>(10, EventoComparators.porPrioridad.reversed());
+
         heap3.insert(e1);
         heap3.insert(e2);
         heap3.insert(e3);
 
-        System.out.println("Antes de actualizar prioridad de e1 (prioridad=5):");
         e1.setPrioridad(100);
         heap3.updatePriority(e1, e1);
-        System.out.println("Después de actualizar prioridad de e1 a 100:");
-        while (!heap3.isEmpty()) System.out.println("  " + heap3.extract());
+
+        while (!heap3.isEmpty()) {
+            System.out.println(heap3.extract());
+        }
 
         // ============================================================
-        // 8. CAMBIO DE CRITERIO DINÁMICO — Los 4 criterios
-        // ============================================================
-        System.out.println("\n========================================");
-        System.out.println(">>> CAMBIO DE CRITERIO DINÁMICO");
-        System.out.println("========================================");
-
-        // Restablecer prioridad de e1 para las pruebas
-        e1.setPrioridad(5);
-
-        // Criterio 1: por prioridad
-        System.out.println("-- Criterio: Por Prioridad --");
-        Heap<Evento> heapCriterio = new Heap<>(10, EventoComparators.porPrioridad);
-        heapCriterio.insert(e1);
-        heapCriterio.insert(e2);
-        heapCriterio.insert(e3);
-        while (!heapCriterio.isEmpty()) System.out.println("  " + heapCriterio.extract());
-
-        // Criterio 2: por congestión
-        System.out.println("-- Criterio: Por Congestión --");
-        heapCriterio.setComparator(EventoComparators.porCongestion);
-        heapCriterio.insert(e1);
-        heapCriterio.insert(e2);
-        heapCriterio.insert(e3);
-        while (!heapCriterio.isEmpty()) System.out.println("  " + heapCriterio.extract());
-
-        // Criterio 3: por tiempo de reporte
-        System.out.println("-- Criterio: Por Tiempo de Reporte --");
-        heapCriterio.setComparator(EventoComparators.porTiempo);
-        heapCriterio.insert(e1);
-        heapCriterio.insert(e2);
-        heapCriterio.insert(e3);
-        while (!heapCriterio.isEmpty()) System.out.println("  " + heapCriterio.extract());
-
-        // Criterio 4: por riesgo
-        System.out.println("-- Criterio: Por Riesgo --");
-        heapCriterio.setComparator(EventoComparators.porRiesgo);
-        heapCriterio.insert(e1);
-        heapCriterio.insert(e2);
-        heapCriterio.insert(e3);
-        while (!heapCriterio.isEmpty()) System.out.println("  " + heapCriterio.extract());
-
-        // ============================================================
-        // 9. BENCHMARK — Simulación y exportación a CSV
+        // 8. BENCHMARK
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> BENCHMARK (exporta resultados.csv)");
+        System.out.println(">>> BENCHMARK");
         System.out.println("========================================");
+
         Benchmark.ejecutar();
 
-        System.out.println("\n=== FIN DEL SISTEMA ===");
+        System.out.println("\n=== FIN ===");
     }
 
     // ============================================================
-    // MÉTODOS AUXILIARES
+    // FIX CRITICO M-TREE
+    // Uso de claves compuestas para evitar colisiones entre nodos
     // ============================================================
-
     private static MTree<String> cargarCiudadDesdeArchivo(String path) {
+
         int maxChildren = 5;
         MTree<String> tree = new MTree<>("Ciudad", maxChildren);
         MNode<String> root = tree.getRoot();
+
         Map<String, MNode<String>> mapa = new HashMap<>();
         mapa.put("Ciudad", root);
 
         try (Scanner scanner = new Scanner(new File(path))) {
-            if (scanner.hasNextLine()) scanner.nextLine(); // header
+
+            if (scanner.hasNextLine()) scanner.nextLine();
 
             while (scanner.hasNextLine()) {
+
                 String[] partes = scanner.nextLine().split(",");
-                if (partes.length < 5) continue;
 
                 String distrito = partes[1].trim();
-                String zona     = partes[2].trim();
-                String avenida  = partes[3].trim();
-                String inter    = partes[4].trim();
+                String zona = partes[2].trim();
+                String avenida = partes[3].trim();
+                String inter = partes[4].trim();
 
-                mapa.putIfAbsent(distrito, new MNode<>(distrito, maxChildren));
-                if (!root.getChildren().contains(mapa.get(distrito)))
-                    root.addChild(mapa.get(distrito));
+                String keyDistrito = "D-" + distrito;
+                String keyZona = keyDistrito + "-Z-" + zona;
+                String keyAvenida = keyZona + "-A-" + avenida;
+                String keyInter = keyAvenida + "-I-" + inter;
 
-                mapa.putIfAbsent(zona, new MNode<>(zona, maxChildren));
-                if (!mapa.get(distrito).getChildren().contains(mapa.get(zona)))
-                    mapa.get(distrito).addChild(mapa.get(zona));
+                mapa.putIfAbsent(keyDistrito, new MNode<>(distrito, maxChildren));
+                if (!root.getChildren().contains(mapa.get(keyDistrito)))
+                    root.addChild(mapa.get(keyDistrito));
 
-                mapa.putIfAbsent(avenida, new MNode<>(avenida, maxChildren));
-                if (!mapa.get(zona).getChildren().contains(mapa.get(avenida)))
-                    mapa.get(zona).addChild(mapa.get(avenida));
+                mapa.putIfAbsent(keyZona, new MNode<>(zona, maxChildren));
+                if (!mapa.get(keyDistrito).getChildren().contains(mapa.get(keyZona)))
+                    mapa.get(keyDistrito).addChild(mapa.get(keyZona));
 
-                mapa.putIfAbsent(inter, new MNode<>(inter, maxChildren));
-                if (!mapa.get(avenida).getChildren().contains(mapa.get(inter)))
-                    mapa.get(avenida).addChild(mapa.get(inter));
+                mapa.putIfAbsent(keyAvenida, new MNode<>(avenida, maxChildren));
+                if (!mapa.get(keyZona).getChildren().contains(mapa.get(keyAvenida)))
+                    mapa.get(keyZona).addChild(mapa.get(keyAvenida));
+
+                mapa.putIfAbsent(keyInter, new MNode<>(inter, maxChildren));
+                if (!mapa.get(keyAvenida).getChildren().contains(mapa.get(keyInter)))
+                    mapa.get(keyAvenida).addChild(mapa.get(keyInter));
             }
 
         } catch (Exception e) {
-            System.out.println("Error cargando ciudad: " + e.getMessage());
+            System.out.println("Error cargando ciudad");
         }
 
         return tree;
     }
 
     private static List<Interseccion> cargarIntersecciones(String path) {
+
         List<Interseccion> lista = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(new File(path))) {
-            if (scanner.hasNextLine()) scanner.nextLine(); // header
+
+            if (scanner.hasNextLine()) scanner.nextLine();
             int id = 1;
 
             while (scanner.hasNextLine()) {
+
                 String[] partes = scanner.nextLine().split(",");
-                if (partes.length < 5) continue;
 
-                String distrito  = partes[1].trim();
-                String zona      = partes[2].trim();
-                String avenida   = partes[3].trim();
-                String inter     = partes[4].trim();
-                int congestion   = partes.length > 5 ? Integer.parseInt(partes[5].trim()) : 0;
-
-                lista.add(new Interseccion(id++, inter, congestion, distrito, zona, avenida));
+                lista.add(new Interseccion(
+                        id++,
+                        partes[4].trim(),
+                        0,
+                        partes[1].trim(),
+                        partes[2].trim(),
+                        partes[3].trim()
+                ));
             }
 
         } catch (Exception e) {
-            System.out.println("Error cargando intersecciones: " + e.getMessage());
+            System.out.println("Error cargando intersecciones");
         }
 
         return lista;
