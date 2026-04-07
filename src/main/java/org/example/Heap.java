@@ -42,13 +42,27 @@ public class Heap<T> {
         return System.nanoTime() - ini;
     }
 
-    public void updatePriority(T element) {
+    // 🔥 CORREGIDO
+    public void updatePriority(T element, T newElement) {
         for (int i = 0; i < size; i++) {
             if (heap[i].equals(element)) {
+                heap[i] = newElement;
                 heapifyUp(i);
                 heapifyDown(i);
-                break;
+                return;
             }
+        }
+    }
+
+    // 🔥 NUEVO
+    public void setComparator(Comparator<T> newComparator) {
+        this.comparator = newComparator;
+        rebuildHeap();
+    }
+
+    private void rebuildHeap() {
+        for (int i = size / 2 - 1; i >= 0; i--) {
+            heapifyDown(i);
         }
     }
 

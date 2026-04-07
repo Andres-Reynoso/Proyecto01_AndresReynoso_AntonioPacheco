@@ -1,7 +1,6 @@
 package org.example;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
@@ -11,11 +10,22 @@ public class Benchmark {
     private static final int REPETICIONES = 10;
     private static final Random random = new Random();
 
+    private static Evento generarEvento(int id) {
+        return new Evento(
+                id,
+                random.nextInt(10),     // prioridad
+                random.nextInt(100),    // congestion
+                System.currentTimeMillis(),
+                random.nextInt(10)      // riesgo
+        );
+    }
+
     public static void ejecutar() {
 
         try (PrintWriter writer = new PrintWriter(new FileWriter("resultados.csv"))) {
 
-            writer.println("N,Estructura,Tiempo_ns,Estado");
+            // 🔥 Header claro (importante)
+            writer.println("N,Operacion,Tiempo_ns,Valor,Estado");
 
             for (int n : N_VALUES) {
 
@@ -26,6 +36,10 @@ public class Benchmark {
                 long totalBSTSearch = 0;
                 long totalAVLSearch = 0;
 
+                int totalBSTComp = 0;
+                int totalAVLComp = 0;
+                int totalAVLRot = 0;
+
                 for (int r = 0; r < REPETICIONES; r++) {
 
                     List<Integer> datos = new ArrayList<>();
@@ -35,7 +49,7 @@ public class Benchmark {
                     BST<Integer> bst = new BST<>(Integer::compareTo);
                     AVL<Integer> avl = new AVL<>(Integer::compareTo);
 
-                    // INSERT
+                    // 🔹 INSERT
                     long iniBST = System.nanoTime();
                     for (int val : datos) bst.insert(val);
                     long finBST = System.nanoTime();
@@ -47,7 +61,7 @@ public class Benchmark {
                     totalBSTInsert += (finBST - iniBST);
                     totalAVLInsert += (finAVL - iniAVL);
 
-                    // SEARCH
+                    // 🔹 SEARCH
                     int target = datos.get(random.nextInt(n));
 
                     long iniSB = System.nanoTime();
@@ -60,64 +74,55 @@ public class Benchmark {
 
                     totalBSTSearch += (finSB - iniSB);
                     totalAVLSearch += (finSA - iniSA);
+
+                    // 🔹 MÉTRICAS
+                    totalBSTComp += bst.comparisons;
+                    totalAVLComp += avl.comparisons;
+                    totalAVLRot += avl.rotations;
                 }
 
-                writer.println(n + ",BST_INSERT," + (totalBSTInsert / REPETICIONES) + ",OK");
-                writer.println(n + ",AVL_INSERT," + (totalAVLInsert / REPETICIONES) + ",OK");
+                // 🔥 INSERT
+                writer.println(n + ",BST_INSERT," + (totalBSTInsert / REPETICIONES) + "," + (totalBSTComp / REPETICIONES) + ",OK");
+                writer.println(n + ",AVL_INSERT," + (totalAVLInsert / REPETICIONES) + "," + (totalAVLComp / REPETICIONES) + ",OK");
 
-                writer.println(n + ",BST_SEARCH," + (totalBSTSearch / REPETICIONES) + ",OK");
-                writer.println(n + ",AVL_SEARCH," + (totalAVLSearch / REPETICIONES) + ",OK");
+                // 🔥 SEARCH
+                writer.println(n + ",BST_SEARCH," + (totalBSTSearch / REPETICIONES) + ",- ,OK");
+                writer.println(n + ",AVL_SEARCH," + (totalAVLSearch / REPETICIONES) + ",- ,OK");
 
-                // PEOR CASO BST
-                BST<Integer> worstBST = new BST<>(Integer::compareTo);
+                // 🔥 ROTACIONES (separado correctamente)
+                writer.println(n + ",AVL_ROTACIONES,-," + (totalAVLRot / REPETICIONES) + ",OK");
 
-                long iniWorst = System.nanoTime();
-                long finWorst;
-
-                try {
-                    for (int i = 0; i < n; i++) {
-                        worstBST.insert(i);
-                    }
-                    finWorst = System.nanoTime();
-                    writer.println(n + ",BST_PEOR_CASO," + (finWorst - iniWorst) + ",OK");
-
-                } catch (StackOverflowError e) {
-                    finWorst = System.nanoTime();
-                    writer.println(n + ",BST_PEOR_CASO," + (finWorst - iniWorst) + ",STACK_OVERFLOW");
-                }
-
-                // LISTA ORDENADA
-                List<Integer> lista = new ArrayList<>();
-
-                long iniList = System.nanoTime();
-                for (int i = 0; i < n; i++) {
-                    lista.add(i);
-                    Collections.sort(lista);
-                }
-                long finList = System.nanoTime();
-
-                writer.println(n + ",LISTA_ORDENADA," + (finList - iniList) + ",OK");
-
-                // HEAP (medición real extracción)
-                Heap<Integer> heap = new Heap<>(10000, Integer::compareTo);
+                // 🔥 HEAP EVENTOS
+                Heap<Evento> heap = new Heap<>(10000, EventoComparators.porPrioridad);
 
                 for (int i = 0; i < 10000; i++) {
-                    heap.insert(random.nextInt());
+                    heap.insert(generarEvento(i));
                 }
 
                 long totalExtract = 0;
-
                 for (int i = 0; i < 10000; i++) {
                     totalExtract += heap.extractWithTime();
                 }
 
-                writer.println(n + ",HEAP_EXTRACT," + (totalExtract / 10000) + ",OK");
+                writer.println(n + ",HEAP_EVENTOS," + (totalExtract / 10000) + ",- ,OK");
+
+                // 🔥 LISTA EVENTOS
+                List<Evento> lista = new ArrayList<>();
+
+                long iniLista = System.nanoTime();
+                for (int i = 0; i < 10000; i++) {
+                    lista.add(generarEvento(i));
+                    lista.sort(EventoComparators.porPrioridad);
+                }
+                long finLista = System.nanoTime();
+
+                writer.println(n + ",LISTA_EVENTOS," + (finLista - iniLista) + ",- ,OK");
             }
 
             System.out.println("Benchmark completado.");
 
-        } catch (IOException e) {
-            System.err.println("Error CSV: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }

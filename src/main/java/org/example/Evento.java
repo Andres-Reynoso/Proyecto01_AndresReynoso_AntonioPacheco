@@ -1,6 +1,6 @@
 package org.example;
 
-public class Evento {
+public class Evento implements Comparable<Evento> {
 
     private int id;
     private int prioridad;
@@ -24,6 +24,19 @@ public class Evento {
 
     public void setPrioridad(int prioridad) {
         this.prioridad = prioridad;
+    }
+
+    @Override
+    public int compareTo(Evento o) {
+        return Integer.compare(this.prioridad, o.prioridad);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Evento)) return false;
+        Evento e = (Evento) o;
+        return this.id == e.id;
     }
 
     @Override

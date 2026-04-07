@@ -1,7 +1,5 @@
 package org.example;
 
-import java.util.*;
-
 public class MTree<T> {
 
     private MNode<T> root;
@@ -16,36 +14,18 @@ public class MTree<T> {
         return root;
     }
 
-    public void addChild(MNode<T> parent, T data) {
-        if (parent != null) {
-            parent.addChild(new MNode<>(data, maxChildren));
-        }
-    }
-
-    // 🔹 NUEVO: contar intersecciones por nodo
-    public int countFromNode(MNode<T> node) {
-        if (node == null) return 0;
-
-        int count = 1;
-        for (MNode<T> child : node.children) {
-            count += countFromNode(child);
-        }
-        return count;
-    }
-
-    // BFS
     public void levelOrder() {
         if (root == null) return;
 
-        Queue<MNode<T>> queue = new LinkedList<>();
-        queue.add(root);
+        SimpleQueue<MNode<T>> queue = new SimpleQueue<>();
+        queue.enqueue(root);
 
         while (!queue.isEmpty()) {
-            MNode<T> current = queue.poll();
-            System.out.print(current.data + " ");
+            MNode<T> current = queue.dequeue();
+            System.out.print(current.getData() + " ");
 
-            for (MNode<T> child : current.children) {
-                queue.add(child);
+            for (MNode<T> child : current.getChildren()) {
+                queue.enqueue(child);
             }
         }
         System.out.println();
@@ -57,10 +37,10 @@ public class MTree<T> {
 
     private int maxDepthRec(MNode<T> node) {
         if (node == null) return 0;
-        if (node.children.isEmpty()) return 1;
+        if (node.getChildren().isEmpty()) return 1;
 
         int max = 0;
-        for (MNode<T> child : node.children) {
+        for (MNode<T> child : node.getChildren()) {
             max = Math.max(max, maxDepthRec(child));
         }
         return max + 1;
@@ -72,10 +52,10 @@ public class MTree<T> {
 
     private int countLeavesRec(MNode<T> node) {
         if (node == null) return 0;
-        if (node.children.isEmpty()) return 1;
+        if (node.getChildren().isEmpty()) return 1;
 
         int count = 0;
-        for (MNode<T> child : node.children) {
+        for (MNode<T> child : node.getChildren()) {
             count += countLeavesRec(child);
         }
         return count;
@@ -86,10 +66,10 @@ public class MTree<T> {
     }
 
     private int countInternalRec(MNode<T> node) {
-        if (node == null || node.children.isEmpty()) return 0;
+        if (node == null || node.getChildren().isEmpty()) return 0;
 
         int count = 1;
-        for (MNode<T> child : node.children) {
+        for (MNode<T> child : node.getChildren()) {
             count += countInternalRec(child);
         }
         return count;
@@ -99,14 +79,14 @@ public class MTree<T> {
         int totalChildren = countAllChildren(root);
         int totalNodes = countNodes(root);
 
-        return (totalNodes == 0) ? 0 : (double) totalChildren / totalNodes;
+        return (double) totalChildren / totalNodes;
     }
 
     private int countAllChildren(MNode<T> node) {
         if (node == null) return 0;
 
-        int count = node.children.size();
-        for (MNode<T> child : node.children) {
+        int count = node.getChildren().size();
+        for (MNode<T> child : node.getChildren()) {
             count += countAllChildren(child);
         }
         return count;
@@ -116,7 +96,7 @@ public class MTree<T> {
         if (node == null) return 0;
 
         int count = 1;
-        for (MNode<T> child : node.children) {
+        for (MNode<T> child : node.getChildren()) {
             count += countNodes(child);
         }
         return count;

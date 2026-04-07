@@ -35,6 +35,11 @@ public class Main {
         System.out.println("Altura AVL: " + avl.height());
         System.out.println("Balance AVL: " + avl.getBalanceFactorRoot());
 
+        // 🔥 NUEVO
+        System.out.println("Comparaciones BST: " + bst.comparisons);
+        System.out.println("Comparaciones AVL: " + avl.comparisons);
+        System.out.println("Rotaciones AVL: " + avl.rotations);
+
         System.out.println("\n>>> HEAP");
 
         Heap<Evento> heap = new Heap<>(10, EventoComparators.porPrioridad.reversed());
@@ -42,6 +47,31 @@ public class Main {
         Evento e1 = new Evento(1, 5, 50, System.currentTimeMillis(), 7);
         Evento e2 = new Evento(2, 2, 30, System.currentTimeMillis(), 3);
         Evento e3 = new Evento(3, 9, 80, System.currentTimeMillis(), 10);
+
+        heap.insert(e1);
+        heap.insert(e2);
+        heap.insert(e3);
+
+        while (!heap.isEmpty()) {
+            System.out.println(heap.extract());
+        }
+
+        // 🔥 updatePriority demo
+        System.out.println("\n>>> UPDATE PRIORITY");
+        heap.insert(e1);
+        heap.insert(e2);
+        heap.insert(e3);
+
+        e1.setPrioridad(100);
+        heap.updatePriority(e1, e1);
+
+        while (!heap.isEmpty()) {
+            System.out.println(heap.extract());
+        }
+
+        // 🔥 cambio de criterio
+        System.out.println("\n>>> CAMBIO DE CRITERIO (RIESGO)");
+        heap.setComparator(EventoComparators.porRiesgo);
 
         heap.insert(e1);
         heap.insert(e2);
@@ -80,21 +110,25 @@ public class Main {
                 String inter = partes[4];
 
                 mapa.putIfAbsent(distrito, new MNode<>(distrito, maxChildren));
-                if (!root.children.contains(mapa.get(distrito))) {
+                if (!root.getChildren().contains(mapa.get(distrito))) {
                     root.addChild(mapa.get(distrito));
                 }
 
                 mapa.putIfAbsent(zona, new MNode<>(zona, maxChildren));
-                if (!mapa.get(distrito).children.contains(mapa.get(zona))) {
+                if (!mapa.get(distrito).getChildren().contains(mapa.get(zona))) {
                     mapa.get(distrito).addChild(mapa.get(zona));
                 }
 
                 mapa.putIfAbsent(avenida, new MNode<>(avenida, maxChildren));
-                if (!mapa.get(zona).children.contains(mapa.get(avenida))) {
+                if (!mapa.get(zona).getChildren().contains(mapa.get(avenida))) {
                     mapa.get(zona).addChild(mapa.get(avenida));
                 }
 
-                mapa.get(avenida).addChild(new MNode<>(inter, maxChildren));
+                // 🔥 corregido (sin duplicados)
+                mapa.putIfAbsent(inter, new MNode<>(inter, maxChildren));
+                if (!mapa.get(avenida).getChildren().contains(mapa.get(inter))) {
+                    mapa.get(avenida).addChild(mapa.get(inter));
+                }
             }
 
         } catch (Exception e) {

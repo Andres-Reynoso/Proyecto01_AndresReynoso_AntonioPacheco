@@ -141,6 +141,35 @@ public class AVL<T> {
         return (cmp < 0) ? searchRec(node.left, data) : searchRec(node.right, data);
     }
 
+    // RECORRIDOS
+    public void inOrder() { inOrderRec(root); System.out.println(); }
+    public void preOrder() { preOrderRec(root); System.out.println(); }
+    public void postOrder() { postOrderRec(root); System.out.println(); }
+
+    private void inOrderRec(AVLNode<T> node) {
+        if (node != null) {
+            inOrderRec(node.left);
+            System.out.print(node.data + " ");
+            inOrderRec(node.right);
+        }
+    }
+
+    private void preOrderRec(AVLNode<T> node) {
+        if (node != null) {
+            System.out.print(node.data + " ");
+            preOrderRec(node.left);
+            preOrderRec(node.right);
+        }
+    }
+
+    private void postOrderRec(AVLNode<T> node) {
+        if (node != null) {
+            postOrderRec(node.left);
+            postOrderRec(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+
     public int height() {
         return getHeight(root);
     }

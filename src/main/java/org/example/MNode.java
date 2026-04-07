@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class MNode<T> {
 
-    T data;
-    ArrayList<MNode<T>> children;
+    private T data;
+    private ArrayList<MNode<T>> children;
     private int maxChildren;
 
     public MNode(T data, int maxChildren) {
@@ -19,5 +19,13 @@ public class MNode<T> {
             throw new IllegalStateException("Máximo de hijos alcanzado");
         }
         children.add(child);
+    }
+
+    public ArrayList<MNode<T>> getChildren() {
+        return children;
+    }
+
+    public T getData() {
+        return data;
     }
 }
