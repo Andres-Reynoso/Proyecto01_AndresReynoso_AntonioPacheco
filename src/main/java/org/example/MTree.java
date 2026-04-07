@@ -101,7 +101,7 @@ public class MTree<T> {
         return count;
     }
 
-    // ✅ FIX 2: contar intersecciones (hojas) bajo un nodo con nombre dado
+
     public int countInterseccionesPorDistrito(String distrito) {
         MNode<T> nodoDistrito = findNode(root, distrito);
         if (nodoDistrito == null) {

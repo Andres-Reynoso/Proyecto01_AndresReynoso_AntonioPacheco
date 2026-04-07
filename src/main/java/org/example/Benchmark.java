@@ -44,9 +44,8 @@ public class Benchmark {
                     BST<Integer> bst = new BST<>(Integer::compareTo);
                     AVL<Integer> avl = new AVL<>(Integer::compareTo);
 
-                    // =====================
                     // INSERT
-                    // =====================
+
                     bst.resetStats();
                     avl.comparisons = 0;
                     avl.rotations = 0;
@@ -69,9 +68,8 @@ public class Benchmark {
                     totalBSTHeight += bst.height();
                     totalAVLHeight += avl.height();
 
-                    // =====================
                     // SEARCH
-                    // =====================
+
                     int target = datos.get(random.nextInt(n));
 
                     bst.resetStats();
@@ -100,9 +98,8 @@ public class Benchmark {
                 writer.println(n + ",BST_ALTURA,-," + (totalBSTHeight / REPETICIONES) + ",OK,Altura promedio");
                 writer.println(n + ",AVL_ALTURA,-," + (totalAVLHeight / REPETICIONES) + ",OK,Altura promedio");
 
-                // =====================
                 // PEOR CASO BST
-                // =====================
+
                 BST<Integer> bstWorst = new BST<>(Integer::compareTo);
 
                 long iniBSTWorst = System.nanoTime();
@@ -112,9 +109,8 @@ public class Benchmark {
                 writer.println(n + ",BST_INSERT_PEOR," + (finBSTWorst - iniBSTWorst) + "," + bstWorst.comparisons + ",OK,Insercion ordenada");
                 writer.println(n + ",BST_ALTURA_PEOR,-," + bstWorst.height() + ",OK,Altura degenerada");
 
-                // =====================
                 // HEAP
-                // =====================
+
                 Heap<Evento> heap = new Heap<>(10000, EventoComparators.porPrioridad);
 
                 for (int i = 0; i < 10000; i++) {
@@ -136,9 +132,8 @@ public class Benchmark {
                 writer.println(n + ",HEAP_EXTRACT_TIME," + (totalExtractTime / 10000) + ",-,OK,Tiempo promedio extraccion");
                 writer.println(n + ",HEAP_SWAPS,-," + (heap.getSwaps() / 10000) + ",OK,Swaps promedio por extraccion");
 
-                // =====================
-                // LISTA vs HEAP (corregido)
-                // =====================
+                // LISTA vs HEAP
+
                 List<Evento> lista = new ArrayList<>();
 
                 long iniLista = System.nanoTime();

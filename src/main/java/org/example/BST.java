@@ -19,9 +19,8 @@ public class BST<T> {
         comparisons = 0;
     }
 
-    // =====================
     // INSERT (iterativo)
-    // =====================
+
     public void insert(T data) {
         if (root == null) {
             root = new BSTNode<>(data);
@@ -54,9 +53,8 @@ public class BST<T> {
         }
     }
 
-    // =====================
     // SEARCH (iterativo)
-    // =====================
+
     public boolean search(T data) {
         BSTNode<T> current = root;
         while (current != null) {
@@ -69,9 +67,8 @@ public class BST<T> {
         return false;
     }
 
-    // =====================
     // DELETE (recursivo)
-    // =====================
+
     public void delete(T data) {
         root = deleteRec(root, data);
     }
@@ -106,9 +103,8 @@ public class BST<T> {
         return node.getData();
     }
 
-    // =====================
     // RECORRIDOS
-    // =====================
+
 
     public void inOrder() {
         inOrderRec(root);
@@ -149,9 +145,8 @@ public class BST<T> {
         }
     }
 
-    // =====================
     // HEIGHT (iterativo con BFS)
-    // =====================
+
     public int height() {
         if (root == null) return 0;
 

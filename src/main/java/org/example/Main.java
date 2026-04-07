@@ -9,7 +9,7 @@ public class Main {
 
         System.out.println("=== MOTOR INTELIGENTE DE GESTIÓN DE TRÁFICO ===\n");
 
-        // ============================================================
+
         // 1. ARBOL MULTI-CAMINO
         // ============================================================
         System.out.println("========================================");
@@ -33,7 +33,6 @@ public class Main {
         System.out.println("Intersecciones en Norte: " +
                 ciudad.countInterseccionesPorDistrito("Norte"));
 
-        // ============================================================
         // 2. BST Y AVL
         // ============================================================
         System.out.println("\n========================================");
@@ -80,7 +79,6 @@ public class Main {
             System.out.println("Comparaciones BST: " + bst.comparisons);
         }
 
-        // ============================================================
         // 3. COMPARACION BST VS AVL
         // ============================================================
         System.out.println("\n========================================");
@@ -103,7 +101,6 @@ public class Main {
         System.out.println("Comparaciones AVL: " + avl.comparisons);
         System.out.println("Rotaciones AVL: " + avl.rotations);
 
-        // ============================================================
         // 4. BUSQUEDA 100K
         // ============================================================
         System.out.println("\n========================================");
@@ -141,7 +138,7 @@ public class Main {
         System.out.println("Comparaciones BST: " + bst100k.comparisons);
         System.out.println("Comparaciones AVL: " + avl100k.comparisons);
 
-        // ============================================================
+
         // 5. HEAP
         // ============================================================
         System.out.println("\n========================================");
@@ -162,7 +159,6 @@ public class Main {
             System.out.println(heap.extract());
         }
 
-        // ============================================================
         // 6. CRITERIO DINAMICO
         // ============================================================
         System.out.println("\n========================================");
@@ -178,7 +174,6 @@ public class Main {
 
         heap2.procesarConCriterio(40);
 
-        // ============================================================
         // 7. UPDATE PRIORITY
         // ============================================================
         System.out.println("\n========================================");
@@ -198,7 +193,6 @@ public class Main {
             System.out.println(heap3.extract());
         }
 
-        // ============================================================
         // 8. BENCHMARK
         // ============================================================
         System.out.println("\n========================================");
@@ -210,10 +204,8 @@ public class Main {
         System.out.println("\n=== FIN ===");
     }
 
-    // ============================================================
-    // FIX CRITICO M-TREE
     // Uso de claves compuestas para evitar colisiones entre nodos
-    // ============================================================
+
     private static MTree<String> cargarCiudadDesdeArchivo(String path) {
 
         int maxChildren = 5;
