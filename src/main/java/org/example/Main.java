@@ -3,15 +3,30 @@ package org.example;
 import java.io.File;
 import java.util.*;
 
+/**
+ * Clase principal del sistema.
+ *
+ * Aquí se prueban todas las estructuras del proyecto:
+ * árbol multi-camino, BST, AVL, heap y benchmark.
+ * También se cargan los datos desde archivo.
+ */
 public class Main {
 
+    /**
+     * Punto de inicio del programa.
+     *
+     * Ejecuta todas las pruebas del sistema:
+     * - Construcción del árbol de la ciudad
+     * - Indexación con AVL o BST
+     * - Comparaciones de rendimiento
+     * - Uso de heap con eventos
+     * - Benchmark final
+     */
     public static void main(String[] args) {
 
         System.out.println("=== MOTOR INTELIGENTE DE GESTIÓN DE TRÁFICO ===\n");
 
-
-        // 1. ARBOL MULTI-CAMINO
-        // ============================================================
+        // 1. ÁRBOL MULTI-CAMINO
         System.out.println("========================================");
         System.out.println(">>> ARBOL MULTI-CAMINO");
         System.out.println("========================================");
@@ -34,7 +49,6 @@ public class Main {
                 ciudad.countInterseccionesPorDistrito("Norte"));
 
         // 2. BST Y AVL
-        // ============================================================
         System.out.println("\n========================================");
         System.out.println("INDEXACION AVL O BST");
         System.out.println("========================================");
@@ -79,8 +93,7 @@ public class Main {
             System.out.println("Comparaciones BST: " + bst.comparisons);
         }
 
-        // 3. COMPARACION BST VS AVL
-        // ============================================================
+        // 3. COMPARACIÓN BST VS AVL
         System.out.println("\n========================================");
         System.out.println(" BST VS AVL (1000)");
         System.out.println("========================================");
@@ -101,8 +114,7 @@ public class Main {
         System.out.println("Comparaciones AVL: " + avl.comparisons);
         System.out.println("Rotaciones AVL: " + avl.rotations);
 
-        // 4. BUSQUEDA 100K
-        // ============================================================
+        // 4. BÚSQUEDA 100K
         System.out.println("\n========================================");
         System.out.println("BUSQUEDA 100K");
         System.out.println("========================================");
@@ -138,9 +150,7 @@ public class Main {
         System.out.println("Comparaciones BST: " + bst100k.comparisons);
         System.out.println("Comparaciones AVL: " + avl100k.comparisons);
 
-
         // 5. HEAP
-        // ============================================================
         System.out.println("\n========================================");
         System.out.println(" HEAP");
         System.out.println("========================================");
@@ -159,8 +169,7 @@ public class Main {
             System.out.println(heap.extract());
         }
 
-        // 6. CRITERIO DINAMICO
-        // ============================================================
+        // 6. CRITERIO DINÁMICO
         System.out.println("\n========================================");
         System.out.println("CRITERIO");
         System.out.println("========================================");
@@ -175,7 +184,6 @@ public class Main {
         heap2.procesarConCriterio(40);
 
         // 7. UPDATE PRIORITY
-        // ============================================================
         System.out.println("\n========================================");
         System.out.println(" UPDATE PRIORITY");
         System.out.println("========================================");
@@ -194,7 +202,6 @@ public class Main {
         }
 
         // 8. BENCHMARK
-        // ============================================================
         System.out.println("\n========================================");
         System.out.println("BENCHMARK");
         System.out.println("========================================");
@@ -204,8 +211,12 @@ public class Main {
         System.out.println("\n=== FIN ===");
     }
 
-    // Uso de claves compuestas para evitar colisiones entre nodos
-
+    /**
+     * Carga la ciudad desde un archivo y arma la jerarquía:
+     * Ciudad → Distrito → Zona → Avenida → Intersección.
+     *
+     * Usa claves internas para no repetir nodos.
+     */
     private static MTree<String> cargarCiudadDesdeArchivo(String path) {
 
         int maxChildren = 5;
@@ -257,6 +268,10 @@ public class Main {
         return tree;
     }
 
+    /**
+     * Lee el archivo y convierte cada línea en una intersección.
+     * Los IDs se generan automáticamente.
+     */
     private static List<Interseccion> cargarIntersecciones(String path) {
 
         List<Interseccion> lista = new ArrayList<>();

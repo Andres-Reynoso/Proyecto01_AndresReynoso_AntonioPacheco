@@ -2,18 +2,33 @@ package org.example;
 
 import java.util.Comparator;
 
+/**
+ * Implementación de un árbol AVL (auto-balanceado).
+ *
+ * Mantiene el árbol balanceado después de cada inserción o eliminación,
+ * garantizando operaciones en tiempo logarítmico.
+ *
+ * Usa un Comparator para definir el orden de los elementos.
+ */
 public class AVL<T> {
 
     private AVLNode<T> root;
     private Comparator<T> comparator;
 
+    // Métricas para análisis
     public int comparisons = 0;
     public int rotations = 0;
 
+    /**
+     * Crea el árbol AVL con un criterio de comparación.
+     */
     public AVL(Comparator<T> comparator) {
         this.comparator = comparator;
     }
 
+    /**
+     * Inserta un elemento en el árbol.
+     */
     public void insert(T data) {
         root = insertRec(root, data);
     }
@@ -32,6 +47,9 @@ public class AVL<T> {
         return balance(node);
     }
 
+    /**
+     * Elimina un elemento del árbol.
+     */
     public void delete(T data) {
         root = deleteRec(root, data);
     }
@@ -46,9 +64,11 @@ public class AVL<T> {
         } else if (cmp > 0) {
             node.setRight(deleteRec(node.getRight(), data));
         } else {
+            // Nodo encontrado
             if (node.getLeft() == null) return node.getRight();
             if (node.getRight() == null) return node.getLeft();
 
+            // Dos hijos: se toma el menor del subárbol derecho
             AVLNode<T> temp = minValueNode(node.getRight());
             node.setData(temp.getData());
             node.setRight(deleteRec(node.getRight(), temp.getData()));
@@ -58,11 +78,17 @@ public class AVL<T> {
         return balance(node);
     }
 
+    /**
+     * Encuentra el nodo con el valor mínimo.
+     */
     private AVLNode<T> minValueNode(AVLNode<T> node) {
         while (node.getLeft() != null) node = node.getLeft();
         return node;
     }
 
+    /**
+     * Actualiza la altura de un nodo.
+     */
     private void updateHeight(AVLNode<T> node) {
         node.setHeight(1 + Math.max(getHeight(node.getLeft()), getHeight(node.getRight())));
     }
@@ -71,14 +97,23 @@ public class AVL<T> {
         return (node == null) ? 0 : node.getHeight();
     }
 
+    /**
+     * Calcula el factor de balance.
+     */
     private int getBalanceFactor(AVLNode<T> node) {
         return getHeight(node.getLeft()) - getHeight(node.getRight());
     }
 
+    /**
+     * Devuelve el factor de balance de la raíz.
+     */
     public int getBalanceFactorRoot() {
         return getBalanceFactor(root);
     }
 
+    /**
+     * Aplica rotaciones si el nodo está desbalanceado.
+     */
     private AVLNode<T> balance(AVLNode<T> node) {
         int bf = getBalanceFactor(node);
 
@@ -105,6 +140,9 @@ public class AVL<T> {
         return node;
     }
 
+    /**
+     * Rotación simple a la derecha.
+     */
     private AVLNode<T> rightRotate(AVLNode<T> y) {
         AVLNode<T> x = y.getLeft();
         AVLNode<T> t2 = x.getRight();
@@ -119,6 +157,9 @@ public class AVL<T> {
         return x;
     }
 
+    /**
+     * Rotación simple a la izquierda.
+     */
     private AVLNode<T> leftRotate(AVLNode<T> x) {
         AVLNode<T> y = x.getRight();
         AVLNode<T> t2 = y.getLeft();
@@ -133,6 +174,9 @@ public class AVL<T> {
         return y;
     }
 
+    /**
+     * Busca un elemento en el árbol.
+     */
     public boolean search(T data) {
         return searchRec(root, data);
     }
@@ -149,6 +193,7 @@ public class AVL<T> {
     }
 
     // RECORRIDOS
+
     public void inOrder() {
         inOrderRec(root);
         System.out.println();
@@ -188,6 +233,9 @@ public class AVL<T> {
         }
     }
 
+    /**
+     * Devuelve la altura del árbol.
+     */
     public int height() {
         return getHeight(root);
     }

@@ -4,23 +4,42 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Implementación de un Árbol Binario de Búsqueda (BST).
+ *
+ * Organiza los elementos según un Comparator, pero no se auto-balancea,
+ * por lo que su rendimiento depende del orden de inserción.
+ */
 public class BST<T> {
 
     private BSTNode<T> root;
     private Comparator<T> comparator;
 
+    // Métrica de comparaciones realizadas
     public int comparisons = 0;
 
+    /**
+     * Crea el árbol con un criterio de comparación.
+     */
     public BST(Comparator<T> comparator) {
         this.comparator = comparator;
     }
 
+    /**
+     * Reinicia el contador de comparaciones.
+     */
     public void resetStats() {
         comparisons = 0;
     }
 
+    // ========================
     // INSERT (iterativo)
+    // ========================
 
+    /**
+     * Inserta un elemento en el árbol.
+     * No permite duplicados.
+     */
     public void insert(T data) {
         if (root == null) {
             root = new BSTNode<>(data);
@@ -40,7 +59,7 @@ public class BST<T> {
             } else if (cmp > 0) {
                 current = current.getRight();
             } else {
-                // Duplicado: no insertar
+                // Duplicado
                 return;
             }
         }
@@ -53,8 +72,13 @@ public class BST<T> {
         }
     }
 
+    // ========================
     // SEARCH (iterativo)
+    // ========================
 
+    /**
+     * Busca un elemento en el árbol.
+     */
     public boolean search(T data) {
         BSTNode<T> current = root;
         while (current != null) {
@@ -67,8 +91,13 @@ public class BST<T> {
         return false;
     }
 
+    // ========================
     // DELETE (recursivo)
+    // ========================
 
+    /**
+     * Elimina un elemento del árbol.
+     */
     public void delete(T data) {
         root = deleteRec(root, data);
     }
@@ -84,9 +113,11 @@ public class BST<T> {
         } else if (cmp > 0) {
             node.setRight(deleteRec(node.getRight(), data));
         } else {
+            // Nodo encontrado
             if (node.getLeft() == null) return node.getRight();
             if (node.getRight() == null) return node.getLeft();
 
+            // Dos hijos: se usa el menor del subárbol derecho
             T min = minValue(node.getRight());
             node.setData(min);
             node.setRight(deleteRec(node.getRight(), min));
@@ -95,6 +126,9 @@ public class BST<T> {
         return node;
     }
 
+    /**
+     * Encuentra el valor mínimo en un subárbol.
+     */
     private T minValue(BSTNode<T> node) {
         while (node.getLeft() != null) {
             comparisons++;
@@ -103,8 +137,9 @@ public class BST<T> {
         return node.getData();
     }
 
+    // ========================
     // RECORRIDOS
-
+    // ========================
 
     public void inOrder() {
         inOrderRec(root);
@@ -145,8 +180,13 @@ public class BST<T> {
         }
     }
 
-    // HEIGHT (iterativo con BFS)
+    // ========================
+    // ALTURA (BFS)
+    // ========================
 
+    /**
+     * Calcula la altura del árbol usando recorrido por niveles.
+     */
     public int height() {
         if (root == null) return 0;
 
@@ -166,6 +206,9 @@ public class BST<T> {
         return height;
     }
 
+    /**
+     * Devuelve la raíz del árbol.
+     */
     public BSTNode<T> getRoot() {
         return root;
     }

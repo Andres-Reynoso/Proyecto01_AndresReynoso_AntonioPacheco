@@ -3,29 +3,47 @@ package org.example;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * Implementación de un Heap genérico basado en arreglo dinámico.
+ *
+ * Mantiene sus elementos ordenados según un Comparator,
+ * lo que permite definir si funciona como min-heap o max-heap.
+ *
+ * Incluye métricas (swaps) y funcionalidades extra como:
+ * - cambio dinámico de criterio
+ * - evaluación por criterio externo
+ * - actualización de prioridad
+ */
 public class Heap<T> {
 
     private ArrayList<T> heap;
     private Comparator<T> comparator;
 
-    // Métrica: número total de intercambios realizados
+    // Cantidad de intercambios realizados (útil para análisis)
     private int swaps = 0;
 
-    // Criterio dinámico para evaluación de elementos
+    // Criterio adicional para evaluar elementos
     private CriterioTrafico<T> criterio;
 
+    /**
+     * Crea un heap con capacidad inicial y criterio de orden.
+     */
     public Heap(int capacidad, Comparator<T> comparator) {
         this.heap = new ArrayList<>(capacidad);
         this.comparator = comparator;
     }
 
-    // Inserta un elemento y mantiene la propiedad de heap
+    /**
+     * Inserta un elemento y lo posiciona correctamente.
+     */
     public void insert(T value) {
         heap.add(value);
         heapifyUp(heap.size() - 1);
     }
 
-    // Extrae el elemento con mayor prioridad según el comparator
+    /**
+     * Extrae el elemento raíz (mayor o menor según el comparator).
+     */
     public T extract() {
         if (heap.isEmpty()) return null;
 
@@ -40,27 +58,40 @@ public class Heap<T> {
         return root;
     }
 
+    /**
+     * Indica si el heap está vacío.
+     */
     public boolean isEmpty() {
         return heap.isEmpty();
     }
 
-    // Reinicia el contador de swaps para mediciones independientes
+    /**
+     * Reinicia el contador de swaps.
+     */
     public void resetSwaps() {
         swaps = 0;
     }
 
-    // Devuelve el número total de intercambios realizados
+    /**
+     * Devuelve la cantidad de intercambios realizados.
+     */
     public int getSwaps() {
         return swaps;
     }
 
-    // Permite cambiar el criterio de orden dinámicamente
+    /**
+     * Cambia el criterio de orden del heap en tiempo de ejecución.
+     * Reorganiza toda la estructura.
+     */
     public void setComparator(Comparator<T> comparator) {
         this.comparator = comparator;
         rebuildHeap();
     }
 
-    // Reconstruye el heap cuando cambia el comparator
+    /**
+     * Reconstruye el heap completo.
+     * Se usa cuando cambia el comparator.
+     */
     private void rebuildHeap() {
         ArrayList<T> copia = new ArrayList<>(heap);
         heap.clear();
@@ -69,11 +100,16 @@ public class Heap<T> {
         }
     }
 
+    /**
+     * Define un criterio externo para evaluar elementos.
+     */
     public void setCriterio(CriterioTrafico<T> criterio) {
         this.criterio = criterio;
     }
 
-    // Evalúa los elementos del heap según un criterio externo
+    /**
+     * Recorre el heap y muestra los elementos que cumplen el criterio.
+     */
     public void procesarConCriterio(int umbral) {
         if (criterio == null) {
             throw new IllegalStateException("Criterio no definido");
@@ -85,7 +121,10 @@ public class Heap<T> {
         }
     }
 
-    // Actualiza la prioridad de un elemento existente
+    /**
+     * Actualiza la prioridad de un elemento ya existente.
+     * Luego reordena el heap.
+     */
     public void updatePriority(T oldValue, T newValue) {
         int index = heap.indexOf(oldValue);
         if (index == -1) return;
@@ -95,7 +134,9 @@ public class Heap<T> {
         heapifyDown(index);
     }
 
-    // Reorganiza hacia arriba
+    /**
+     * Ajusta el elemento hacia arriba hasta restaurar el orden.
+     */
     private void heapifyUp(int index) {
         while (index > 0) {
             int parent = (index - 1) / 2;
@@ -105,7 +146,9 @@ public class Heap<T> {
         }
     }
 
-    // Reorganiza hacia abajo
+    /**
+     * Ajusta el elemento hacia abajo hasta restaurar el orden.
+     */
     private void heapifyDown(int index) {
         int size = heap.size();
 
@@ -127,7 +170,9 @@ public class Heap<T> {
         }
     }
 
-    // Intercambia dos posiciones y contabiliza el swap
+    /**
+     * Intercambia dos elementos y registra el swap.
+     */
     private void swap(int i, int j) {
         T temp = heap.get(i);
         heap.set(i, heap.get(j));

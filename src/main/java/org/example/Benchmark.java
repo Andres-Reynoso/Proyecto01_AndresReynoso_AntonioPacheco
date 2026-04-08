@@ -4,12 +4,30 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.*;
 
+/**
+ * Ejecuta pruebas de rendimiento sobre las estructuras del proyecto.
+ *
+ * Se evalúan principalmente:
+ * - Inserción y búsqueda en BST y AVL
+ * - Comparación de alturas y operaciones internas
+ * - Comportamiento en peor caso (BST degenerado)
+ * - Rendimiento de Heap vs lista ordenada
+ *
+ * Los resultados se guardan en un archivo CSV.
+ */
 public class Benchmark {
 
+    // Tamaños de entrada a evaluar
     private static final int[] N_VALUES = {1000, 10000, 50000, 100000};
+
+    // Cantidad de repeticiones para promediar resultados
     private static final int REPETICIONES = 10;
+
     private static final Random random = new Random();
 
+    /**
+     * Genera un evento aleatorio para pruebas del heap.
+     */
     private static Evento generarEvento(int id) {
         return new Evento(
                 id,
@@ -20,6 +38,17 @@ public class Benchmark {
         );
     }
 
+    /**
+     * Ejecuta todo el benchmark y escribe los resultados en un archivo CSV.
+     *
+     * Para cada tamaño N:
+     * - Inserta datos aleatorios en BST y AVL
+     * - Mide tiempos de inserción y búsqueda
+     * - Registra comparaciones, rotaciones y altura
+     * - Evalúa peor caso del BST (datos ordenados)
+     * - Mide extracción en heap
+     * - Compara heap contra ordenamiento de lista
+     */
     public static void ejecutar() {
 
         try (PrintWriter writer = new PrintWriter(new FileWriter("resultados.csv"))) {
@@ -37,6 +66,7 @@ public class Benchmark {
 
                 for (int r = 0; r < REPETICIONES; r++) {
 
+                    // Generación de datos aleatorios
                     List<Integer> datos = new ArrayList<>();
                     for (int i = 0; i < n; i++) datos.add(i);
                     Collections.shuffle(datos);
@@ -44,7 +74,9 @@ public class Benchmark {
                     BST<Integer> bst = new BST<>(Integer::compareTo);
                     AVL<Integer> avl = new AVL<>(Integer::compareTo);
 
-                    // INSERT
+                    // ========================
+                    // INSERCIÓN
+                    // ========================
 
                     bst.resetStats();
                     avl.comparisons = 0;
@@ -68,7 +100,9 @@ public class Benchmark {
                     totalBSTHeight += bst.height();
                     totalAVLHeight += avl.height();
 
-                    // SEARCH
+                    // ========================
+                    // BÚSQUEDA
+                    // ========================
 
                     int target = datos.get(random.nextInt(n));
 
@@ -87,6 +121,7 @@ public class Benchmark {
                     totalAVLSearch += (finSA - iniSA);
                 }
 
+                // Promedios
                 writer.println(n + ",BST_INSERT," + (totalBSTInsert / REPETICIONES) + "," + (totalBSTComp / REPETICIONES) + ",OK,Insercion promedio");
                 writer.println(n + ",AVL_INSERT," + (totalAVLInsert / REPETICIONES) + "," + (totalAVLComp / REPETICIONES) + ",OK,Insercion promedio");
 
@@ -98,7 +133,9 @@ public class Benchmark {
                 writer.println(n + ",BST_ALTURA,-," + (totalBSTHeight / REPETICIONES) + ",OK,Altura promedio");
                 writer.println(n + ",AVL_ALTURA,-," + (totalAVLHeight / REPETICIONES) + ",OK,Altura promedio");
 
+                // ========================
                 // PEOR CASO BST
+                // ========================
 
                 BST<Integer> bstWorst = new BST<>(Integer::compareTo);
 
@@ -109,7 +146,9 @@ public class Benchmark {
                 writer.println(n + ",BST_INSERT_PEOR," + (finBSTWorst - iniBSTWorst) + "," + bstWorst.comparisons + ",OK,Insercion ordenada");
                 writer.println(n + ",BST_ALTURA_PEOR,-," + bstWorst.height() + ",OK,Altura degenerada");
 
+                // ========================
                 // HEAP
+                // ========================
 
                 Heap<Evento> heap = new Heap<>(10000, EventoComparators.porPrioridad);
 
@@ -132,7 +171,9 @@ public class Benchmark {
                 writer.println(n + ",HEAP_EXTRACT_TIME," + (totalExtractTime / 10000) + ",-,OK,Tiempo promedio extraccion");
                 writer.println(n + ",HEAP_SWAPS,-," + (heap.getSwaps() / 10000) + ",OK,Swaps promedio por extraccion");
 
-                // LISTA vs HEAP
+                // ========================
+                // LISTA VS HEAP
+                // ========================
 
                 List<Evento> lista = new ArrayList<>();
 

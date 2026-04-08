@@ -1,49 +1,49 @@
 N,Operacion,Tiempo_ns,Valor,Estado,Descripcion
-1000,BST_INSERT,411730,11411,OK,Insercion promedio
-1000,AVL_INSERT,262240,8731,OK,Insercion promedio
-1000,BST_SEARCH,1550,-,OK,Busqueda promedio
-1000,AVL_SEARCH,1300,-,OK,Busqueda promedio
-1000,AVL_ROTACIONES,-,705,OK,Rotaciones promedio
-1000,BST_ALTURA,-,23,OK,Altura promedio
+1000,BST_INSERT,581020,11072,OK,Insercion promedio
+1000,AVL_INSERT,262760,8743,OK,Insercion promedio
+1000,BST_SEARCH,1470,-,OK,Busqueda promedio
+1000,AVL_SEARCH,1330,-,OK,Busqueda promedio
+1000,AVL_ROTACIONES,-,702,OK,Rotaciones promedio
+1000,BST_ALTURA,-,21,OK,Altura promedio
 1000,AVL_ALTURA,-,12,OK,Altura promedio
-1000,BST_INSERT_PEOR,3478400,499500,OK,Insercion ordenada
+1000,BST_INSERT_PEOR,1753800,499500,OK,Insercion ordenada
 1000,BST_ALTURA_PEOR,-,1000,OK,Altura degenerada
-1000,HEAP_EXTRACT_TIME,449,-,OK,Tiempo promedio extraccion
+1000,HEAP_EXTRACT_TIME,433,-,OK,Tiempo promedio extraccion
 1000,HEAP_SWAPS,-,9,OK,Swaps promedio por extraccion
-1000,LISTA_SORT,6127900,-,OK,Ordenamiento total de lista
-10000,BST_INSERT,2377430,158970,OK,Insercion promedio
-10000,AVL_INSERT,1970060,121010,OK,Insercion promedio
-10000,BST_SEARCH,5340,-,OK,Busqueda promedio
-10000,AVL_SEARCH,3480,-,OK,Busqueda promedio
-10000,AVL_ROTACIONES,-,6992,OK,Rotaciones promedio
-10000,BST_ALTURA,-,32,OK,Altura promedio
+1000,LISTA_SORT,4399600,-,OK,Ordenamiento total de lista
+10000,BST_INSERT,2057110,157157,OK,Insercion promedio
+10000,AVL_INSERT,1668720,121122,OK,Insercion promedio
+10000,BST_SEARCH,5100,-,OK,Busqueda promedio
+10000,AVL_SEARCH,3060,-,OK,Busqueda promedio
+10000,AVL_ROTACIONES,-,7018,OK,Rotaciones promedio
+10000,BST_ALTURA,-,31,OK,Altura promedio
 10000,AVL_ALTURA,-,16,OK,Altura promedio
-10000,BST_INSERT_PEOR,193619200,49995000,OK,Insercion ordenada
+10000,BST_INSERT_PEOR,143073700,49995000,OK,Insercion ordenada
 10000,BST_ALTURA_PEOR,-,10000,OK,Altura degenerada
-10000,HEAP_EXTRACT_TIME,165,-,OK,Tiempo promedio extraccion
+10000,HEAP_EXTRACT_TIME,148,-,OK,Tiempo promedio extraccion
 10000,HEAP_SWAPS,-,9,OK,Swaps promedio por extraccion
-10000,LISTA_SORT,4906100,-,OK,Ordenamiento total de lista
-50000,BST_INSERT,11843910,947343,OK,Insercion promedio
-50000,AVL_INSERT,14677400,722890,OK,Insercion promedio
-50000,BST_SEARCH,1870,-,OK,Busqueda promedio
-50000,AVL_SEARCH,11100,-,OK,Busqueda promedio
-50000,AVL_ROTACIONES,-,35007,OK,Rotaciones promedio
+10000,LISTA_SORT,2381800,-,OK,Ordenamiento total de lista
+50000,BST_INSERT,11039950,958536,OK,Insercion promedio
+50000,AVL_INSERT,12499470,722858,OK,Insercion promedio
+50000,BST_SEARCH,1820,-,OK,Busqueda promedio
+50000,AVL_SEARCH,11010,-,OK,Busqueda promedio
+50000,AVL_ROTACIONES,-,34947,OK,Rotaciones promedio
 50000,BST_ALTURA,-,37,OK,Altura promedio
 50000,AVL_ALTURA,-,18,OK,Altura promedio
-50000,BST_INSERT_PEOR,8549320900,1249975000,OK,Insercion ordenada
+50000,BST_INSERT_PEOR,5011205400,1249975000,OK,Insercion ordenada
 50000,BST_ALTURA_PEOR,-,50000,OK,Altura degenerada
-50000,HEAP_EXTRACT_TIME,220,-,OK,Tiempo promedio extraccion
+50000,HEAP_EXTRACT_TIME,212,-,OK,Tiempo promedio extraccion
 50000,HEAP_SWAPS,-,9,OK,Swaps promedio por extraccion
-50000,LISTA_SORT,2627600,-,OK,Ordenamiento total de lista
-100000,BST_INSERT,34514130,2026538,OK,Insercion promedio
-100000,AVL_INSERT,43176060,1548756,OK,Insercion promedio
-100000,BST_SEARCH,12950,-,OK,Busqueda promedio
-100000,AVL_SEARCH,2220,-,OK,Busqueda promedio
-100000,AVL_ROTACIONES,-,69847,OK,Rotaciones promedio
+50000,LISTA_SORT,3367800,-,OK,Ordenamiento total de lista
+100000,BST_INSERT,42880900,1988837,OK,Insercion promedio
+100000,AVL_INSERT,52525380,1548205,OK,Insercion promedio
+100000,BST_SEARCH,1570,-,OK,Busqueda promedio
+100000,AVL_SEARCH,2990,-,OK,Busqueda promedio
+100000,AVL_ROTACIONES,-,69764,OK,Rotaciones promedio
 100000,BST_ALTURA,-,40,OK,Altura promedio
 100000,AVL_ALTURA,-,20,OK,Altura promedio
-100000,BST_INSERT_PEOR,35498580500,704982704,OK,Insercion ordenada
+100000,BST_INSERT_PEOR,19749855500,704982704,OK,Insercion ordenada
 100000,BST_ALTURA_PEOR,-,100000,OK,Altura degenerada
-100000,HEAP_EXTRACT_TIME,255,-,OK,Tiempo promedio extraccion
+100000,HEAP_EXTRACT_TIME,198,-,OK,Tiempo promedio extraccion
 100000,HEAP_SWAPS,-,9,OK,Swaps promedio por extraccion
-100000,LISTA_SORT,2125900,-,OK,Ordenamiento total de lista
+100000,LISTA_SORT,1889800,-,OK,Ordenamiento total de lista
