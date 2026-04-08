@@ -36,7 +36,7 @@ public class Main {
         // 2. BST Y AVL
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> INDEXACION AVL O BST");
+        System.out.println("INDEXACION AVL O BST");
         System.out.println("========================================");
 
         Scanner sc = new Scanner(System.in);
@@ -82,7 +82,7 @@ public class Main {
         // 3. COMPARACION BST VS AVL
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> BST VS AVL (1000)");
+        System.out.println(" BST VS AVL (1000)");
         System.out.println("========================================");
 
         BST<Integer> bst = new BST<>(Integer::compareTo);
@@ -104,7 +104,7 @@ public class Main {
         // 4. BUSQUEDA 100K
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> BUSQUEDA 100K");
+        System.out.println("BUSQUEDA 100K");
         System.out.println("========================================");
 
         BST<Integer> bst100k = new BST<>(Integer::compareTo);
@@ -142,7 +142,7 @@ public class Main {
         // 5. HEAP
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> HEAP");
+        System.out.println(" HEAP");
         System.out.println("========================================");
 
         Heap<Evento> heap = new Heap<>(10, EventoComparators.porPrioridad.reversed());
@@ -162,7 +162,7 @@ public class Main {
         // 6. CRITERIO DINAMICO
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> CRITERIO");
+        System.out.println("CRITERIO");
         System.out.println("========================================");
 
         Heap<Evento> heap2 = new Heap<>(10, EventoComparators.porPrioridad);
@@ -177,7 +177,7 @@ public class Main {
         // 7. UPDATE PRIORITY
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> UPDATE PRIORITY");
+        System.out.println(" UPDATE PRIORITY");
         System.out.println("========================================");
 
         Heap<Evento> heap3 = new Heap<>(10, EventoComparators.porPrioridad.reversed());
@@ -196,7 +196,7 @@ public class Main {
         // 8. BENCHMARK
         // ============================================================
         System.out.println("\n========================================");
-        System.out.println(">>> BENCHMARK");
+        System.out.println("BENCHMARK");
         System.out.println("========================================");
 
         Benchmark.ejecutar();
