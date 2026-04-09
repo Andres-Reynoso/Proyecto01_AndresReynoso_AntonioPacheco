@@ -28,7 +28,7 @@ public class Main {
 
         // 1. ÁRBOL MULTI-CAMINO
         System.out.println("========================================");
-        System.out.println(">>> ARBOL MULTI-CAMINO");
+        System.out.println("ARBOL MULTI-CAMINO");
         System.out.println("========================================");
 
         MTree<String> ciudad = cargarCiudadDesdeArchivo("datos_ciudad.txt");
